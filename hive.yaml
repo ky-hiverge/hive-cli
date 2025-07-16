@@ -1,0 +1,6 @@
+repo:
+  url: https://github.com/hiverge/beluga-direct-plan-project.git
+evaluator:
+  timeout: 60
+wandb:
+  enabled: false

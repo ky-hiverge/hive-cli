@@ -1,31 +1,30 @@
-import yaml
+from hive_cli.config import HiveConfig
+from hive_cli.platform.base import Platform
+from hive_cli.utils.logger import logger
 
-from .base import Platform
 
 class K8sPlatform(Platform):
-    def init(self, args):
-        print("Initializing experiment on Kubernetes...")
+    def __init__(self, name: str):
+        super().__init__(name)
 
-    def create(self, args):
-        print(f"Creating experiment on Kubernetes with name: {self.generate_experiment_name(args.name)}")
-        config_file = args.config
+    def create(self, config: HiveConfig):
+        logger.info(f"Creating experiment '{self.experiment_name}' on Kubernetes...")
 
-        try:
-            with open(config_file, 'r') as file:
-                config = yaml.safe_load(file)
-                print(f"Repository URL: {config.get('repo')}")
-        except FileNotFoundError:
-            print(f"Error: Config file '{config_file}' not found.")
-            return
-        except yaml.YAMLError as e:
-            print(f"Error parsing YAML configuration: {e}")
-            return
+        config = self.setup_environment(config)
+        self.deploy(config)
+
+        logger.info(f"Launch experiment '{self.experiment_name}' successfully on Kubernetes.")
+
+    def deploy(self, config: HiveConfig):
+        logger.info(f"Deploying experiment '{self.experiment_name}' on Kubernetes...")
+
+        logger.info(f"Experiment '{self.experiment_name}' deployed successfully on Kubernetes.")
 
     def delete(self, args):
-        print("Deleting experiment on Kubernetes...")
+        logger.info(f"Deleting experiment '{self.experiment_name}' on {args.platform} platform...")
 
     def login(self, args):
-        print("Logging in to hive on Kubernetes...")
+        logger.info(f"Logging in to hive on {args.platform} platform...")
 
     def show_experiments(self, args):
-        print("Showing experiments on Kubernetes...")
+        logger.info(f"Showing experiments on {args.platform} platform...")

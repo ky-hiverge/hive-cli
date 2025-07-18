@@ -44,7 +44,7 @@ class K8sPlatform(Platform):
             )
 
     def delete(self, name: str):
-        logger.info(f"Deleting experiment '{self.experiment_name}' on Kubernetes...")
+        logger.info(f"Deleting experiment '{name}' on Kubernetes...")
         try:
             # Attempt to delete the experiment by its name
             self.k8s_client.delete_namespaced_custom_object(

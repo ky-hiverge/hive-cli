@@ -1,5 +1,8 @@
 from datetime import datetime
 
+from kubernetes import client
+from kubernetes import config as k8s_config
+
 
 class Runtime:
     def __init__(self, name: str):
@@ -8,6 +11,11 @@ class Runtime:
         """
 
         self.experiment_name = generate_experiment_name(name)
+
+        # Load the kube config.
+        # This assumes you have a kubeconfig file at the default location (~/.kube/config)
+        k8s_config.load_kube_config()
+        self.k8s_client = client.CustomObjectsApi()
 
 
 def generate_experiment_name(base_name: str) -> str:

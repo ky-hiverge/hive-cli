@@ -23,11 +23,22 @@ def create(args):
 
 
 def delete(args):
-    platform = PLATFORMS[args.platform](args.name)
-    platform.delete(args)
+    platform = PLATFORMS[args.platform](args.platform)
+    platform.delete(args.name)
 
 
 def main():
+    blue = "\033[34m"
+    reset = "\033[0m"
+    print(f"{blue}█████   █████  ███                      ")
+    print("░░███   ░░███  ░░░                       ")
+    print(" ░███    ░███  ████  █████ █████  ██████ ")
+    print(" ░███████████ ░░███ ░░███ ░░███  ███░░███")
+    print(" ░███░░░░░███  ░███  ░███  ░███ ░███████ ")
+    print(" ░███    ░███  ░███  ░░███ ███  ░███░░░  ")
+    print(" █████   █████ █████  ░░█████   ░░██████ ")
+    print(f"░░░░░   ░░░░░ ░░░░░    ░░░░░     ░░░░░░  {reset}")
+
     parser = argparse.ArgumentParser(description="Hive CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
 

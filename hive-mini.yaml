@@ -1,0 +1,15 @@
+# The minimum configuration for Hive CLI.
+
+project_name: beluga-direct-plan-project
+repo:
+  url: https://github.com/hiverge/beluga-direct-plan-project.git
+evaluator:
+  # image will be set automatically after building the image
+  # image: <>
+  replicas: 1
+  timeout: 60
+wandb:
+  enabled: false
+# cloud vendor configuration
+gcp:
+  project_id: runsandbox-449400

@@ -1,10 +1,12 @@
-from calendar import c
 from kubernetes.client.rest import ApiException
 from kubernetes.client.api_client import ApiClient
+from rich.table import Table
+from rich.console import Console
 
 from hive_cli.config import HiveConfig
 from hive_cli.platform.base import Platform
 from hive_cli.utils.logger import logger
+from hive_cli.utils.time import humanize_time
 
 GROUP = "core.hiverge.ai"
 VERSION = "v1alpha1"
@@ -55,7 +57,31 @@ class K8sPlatform(Platform):
         logger.info(f"Logging in to hive on {args.platform} platform...")
 
     def show_experiments(self, args):
-        logger.info(f"Showing experiments on {args.platform} platform...")
+        resp = self.k8s_client.list_namespaced_custom_object(
+            group=GROUP,
+            version=VERSION,
+            namespace=NAMESPACE,
+            plural=RESOURCE_PLURAL,
+        )
+
+        table = Table(show_header=True, header_style="bold", box=None, show_lines=False)
+        table.add_column("Name")
+        table.add_column("Status")
+        table.add_column("Age")
+
+        for item in resp.get("items", []):
+            metadata = item.get("metadata", {})
+            status = item.get("status", {}).get("phase", "Unknown")
+            age = humanize_time(metadata.get("creationTimestamp"))
+
+            table.add_row(
+                metadata.get("name", "Unknown"),
+                status,
+                age if age else "N/A",
+            )
+
+        console = Console()
+        console.print(table)
 
 def deploy(op: str, client: ApiClient, name: str, config: HiveConfig):
     logger.info(f"Applying experiment '{name}' on Kubernetes...")

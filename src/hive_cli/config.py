@@ -11,7 +11,7 @@ class PlatformType(str, Enum):
 
 
 class CoordinatorConfig(BaseModel):
-    image: str
+    image: str = "hiverge/coordinator:latest"
 
 
 class EvaluatorConfig(BaseModel):
@@ -40,7 +40,7 @@ class HiveConfig(BaseModel):
     platform: PlatformType = PlatformType.K8S
 
     repo: RepoConfig
-    coordinator: CoordinatorConfig
+    coordinator: CoordinatorConfig = CoordinatorConfig()
     evaluator: EvaluatorConfig
     wandb: WanDBConfig
 

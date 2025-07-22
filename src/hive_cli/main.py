@@ -21,6 +21,13 @@ def create_experiment(args):
 
     platform.create(config=config)
 
+def update_experiment(args):
+    config = load_config(args.config)
+    # Init the platform based on the config.
+    platform = PLATFORMS[config.platform.value](args.name)
+
+    platform.update(args.name, config=config)
+    print(f"Experiment {args.name} updated successfully.")
 
 def delete_experiment(args):
     platform = PLATFORMS[args.platform](args.platform)
@@ -46,18 +53,27 @@ def main():
     parser = argparse.ArgumentParser(description="Hive CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    # init command
-    parser_init = subparsers.add_parser("init", help="Initialize a repository")
-    parser_init.set_defaults(func=init)
+    # # init command
+    # parser_init = subparsers.add_parser("init", help="Initialize a repository")
+    # parser_init.set_defaults(func=init)
 
     # create command
     parser_create = subparsers.add_parser("create", help="Create resources")
     create_subparsers = parser_create.add_subparsers(dest="create_target")
 
     parser_create_exp = create_subparsers.add_parser("experiment", help="Create a new experiment")
-    parser_create_exp.add_argument("name", help="Name of the experiment")
+    parser_create_exp.add_argument("name", help="Name of the experiment, if it ends with '-', a timestamp will be appended. Example: 'exp-' will become 'exp-2023-10-01-123456'")
     parser_create_exp.add_argument("-f", "--config", required=True, help="Path to the config file")
     parser_create_exp.set_defaults(func=create_experiment)
+
+    # update command
+    parser_update = subparsers.add_parser("update", help="Update resources")
+    update_subparsers = parser_update.add_subparsers(dest="update_target")
+
+    parser_update_exp = update_subparsers.add_parser("experiment", help="Update an experiment")
+    parser_update_exp.add_argument("name", help="Name of the experiment")
+    parser_update_exp.add_argument("-f", "--config", required=True, help="Path to the config file")
+    parser_update_exp.set_defaults(func=update_experiment)
 
     # delete command
     parser_delete = subparsers.add_parser("delete", help="Delete resources")

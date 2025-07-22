@@ -16,6 +16,10 @@ class Platform(Runtime, ABC):
         pass
 
     @abstractmethod
+    def update(self, name: str, config: HiveConfig):
+        pass
+
+    @abstractmethod
     def delete(self, name: str):
         pass
 

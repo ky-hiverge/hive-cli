@@ -1,4 +1,6 @@
+from calendar import c
 from kubernetes.client.rest import ApiException
+from kubernetes.client.api_client import ApiClient
 
 from hive_cli.config import HiveConfig
 from hive_cli.platform.base import Platform
@@ -20,28 +22,17 @@ class K8sPlatform(Platform):
         logger.info(f"Creating experiment '{self.experiment_name}' on Kubernetes...")
 
         config = self.setup_environment(config)
-        self.deploy(config)
+        deploy("CREATE", self.k8s_client, self.experiment_name, config)
 
         logger.info(f"Launch experiment '{self.experiment_name}' successfully on Kubernetes.")
 
-    def deploy(self, config: HiveConfig):
-        logger.info(f"Deploying experiment '{self.experiment_name}' on Kubernetes...")
+    def update(self, name: str, config: HiveConfig):
+        logger.info(f"Updating experiment '{name}' on Kubernetes...")
 
-        body = construct_experiment(self.experiment_name, NAMESPACE, config)
+        deploy("UPDATE", self.k8s_client, name, config)
 
-        try:
-            resp = self.k8s_client.create_namespaced_custom_object(
-                group=GROUP, version=VERSION, namespace=NAMESPACE, plural=RESOURCE_PLURAL, body=body
-            )
-            logger.info(
-                f"Experiment '{self.experiment_name}' deployed successfully on Kubernetes with name {resp['metadata']['name']}."
-            )
-        except ApiException as e:
-            logger.error(f"Failed to create experiment '{self.experiment_name}' on Kubernetes: {e}")
-        except Exception as e:
-            logger.error(
-                f"An unexpected error occurred while creating experiment '{self.experiment_name}': {e}"
-            )
+        logger.info(f"Launch experiment '{name}' successfully on Kubernetes.")
+
 
     def delete(self, name: str):
         logger.info(f"Deleting experiment '{name}' on Kubernetes...")
@@ -66,6 +57,43 @@ class K8sPlatform(Platform):
     def show_experiments(self, args):
         logger.info(f"Showing experiments on {args.platform} platform...")
 
+def deploy(op: str, client: ApiClient, name: str, config: HiveConfig):
+    logger.info(f"Applying experiment '{name}' on Kubernetes...")
+
+    body = construct_experiment(name, NAMESPACE, config)
+
+    try:
+        if op == "CREATE":
+            resp = client.create_namespaced_custom_object(
+                group=GROUP, version=VERSION, namespace=NAMESPACE, plural=RESOURCE_PLURAL, body=body
+            )
+            logger.info(
+                f"Experiment '{name}' created successfully on Kubernetes with name {resp['metadata']['name']}."
+            )
+        # TODO: add validation for op, only replicas can be updated
+        elif op == "UPDATE":
+            current_exp = client.get_namespaced_custom_object(
+                group=GROUP, version=VERSION, namespace=NAMESPACE, plural=RESOURCE_PLURAL, name=name
+            )
+
+            # Populate some fields manually because they're generated in creation.
+            if body["spec"]["evaluator"].get("image") is None:
+                body["spec"]["evaluator"]["image"] = current_exp["spec"]["evaluator"]["image"]
+
+            resp = client.patch_namespaced_custom_object(
+                group=GROUP, version=VERSION, namespace=NAMESPACE, plural=RESOURCE_PLURAL, name=name, body=body
+            )
+            logger.info(
+                f"Experiment '{name}' updated successfully on Kubernetes with name {resp['metadata']['name']}."
+            )
+        else:
+            raise ValueError(f"Unsupported operation: {op}. Supported operations are 'CREATE' and 'UPDATE'.")
+    except ApiException as e:
+        logger.error(f"Failed to deploy experiment '{name}' on Kubernetes: {e}")
+    except Exception as e:
+        logger.error(
+            f"An unexpected error occurred while deploying experiment '{name}': {e}"
+        )
 
 def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
     """

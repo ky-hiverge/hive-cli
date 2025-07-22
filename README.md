@@ -1,19 +1,44 @@
-# Hive CLI
+# Hive-CLI
 
-The CLI for Hive.
+Hive-CLI is a command-line interface for managing and deploying Hive agent and experiments on Kubernetes and other platforms.
 
-## How to Setup
+```bash
+     ███          █████   █████  ███
+    ░░░███       ░░███   ░░███  ░░░
+      ░░░███      ░███    ░███  ████  █████ █████  ██████
+        ░░░███    ░███████████ ░░███ ░░███ ░░███  ███░░███
+         ███░     ░███░░░░░███  ░███  ░███  ░███ ░███████
+       ███░       ░███    ░███  ░███  ░░███ ███  ░███░░░
+     ███░         █████   █████ █████  ░░█████   ░░██████
+    ░░░          ░░░░░   ░░░░░ ░░░░░    ░░░░░     ░░░░░░
+```
 
-Run `source start.sh` to setup the environment.
+## Installation
 
-Run `deactivate` to exit the environment.
+### Install via pip (TBD)
+
+```bash
+pip install hive-cli
+```
+
+### Install from source
+
+```bash
+source start.sh
+```
 
 ## How to Run
 
+### Pre-requisites
+
+- kubectl installed
+- kubeconfig file (~/.kube/config) to communicate with your cluster
+- For GCP users, ensure you have `gcloud` installed and logged in to your GCP account.
+
 Support commands:
 ```
-init                Initialize a repository
 create              Create resources
+update              Update resources
 delete              Delete resources
 ```
 

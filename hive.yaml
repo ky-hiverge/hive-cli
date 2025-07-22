@@ -9,7 +9,7 @@ repo:
 evaluator:
   # image will be set automatically after building the image
   # image: <>
-  replicas: 10
+  replicas: 1
   timeout: 60
 coordinator:
   image: hive-coordinator:latest

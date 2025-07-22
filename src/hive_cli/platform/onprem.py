@@ -10,6 +10,9 @@ class OnPremPlatform(Platform):
     def create(self, config: HiveConfig):
         print(f"Creating hive on-premise with name: {self.experiment_name} and config: {config}")
 
+    def update(self, name: str, config: HiveConfig):
+        print(f"Updating hive on-premise with name: {name} and config: {config}")
+
     def delete(self, name: str):
         print("Deleting hive on-premise...")
 

@@ -10,14 +10,21 @@ class PlatformType(str, Enum):
     ON_PREM = "on-prem"
 
 
+class ResourceConfig(BaseModel):
+    requests: Optional[dict] = {"cpu": "100m", "memory": "256Mi"}
+    limits: Optional[dict] = {"cpu": "500m", "memory": "512Mi"}
+
+
 class CoordinatorConfig(BaseModel):
     image: str = "hiverge/coordinator:latest"
+    resources: ResourceConfig = ResourceConfig()
 
 
 class EvaluatorConfig(BaseModel):
     image: Optional[str] = None
     replicas: int = 1
     timeout: int = 60
+    resources: ResourceConfig = ResourceConfig()
 
 
 class RepoConfig(BaseModel):
@@ -37,6 +44,7 @@ class HiveConfig(BaseModel):
     project_name: (
         str  # project_name is for a specific project, like the beluga-direct-plan-project.
     )
+
     platform: PlatformType = PlatformType.K8S
 
     repo: RepoConfig

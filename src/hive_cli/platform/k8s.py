@@ -1,7 +1,7 @@
-from kubernetes.client.rest import ApiException
 from kubernetes.client.api_client import ApiClient
-from rich.table import Table
+from kubernetes.client.rest import ApiException
 from rich.console import Console
+from rich.table import Table
 
 from hive_cli.config import HiveConfig
 from hive_cli.platform.base import Platform
@@ -34,7 +34,6 @@ class K8sPlatform(Platform):
         deploy("UPDATE", self.k8s_client, name, config)
 
         logger.info(f"Launch experiment '{name}' successfully on Kubernetes.")
-
 
     def delete(self, name: str):
         logger.info(f"Deleting experiment '{name}' on Kubernetes...")
@@ -83,6 +82,7 @@ class K8sPlatform(Platform):
         console = Console()
         console.print(table)
 
+
 def deploy(op: str, client: ApiClient, name: str, config: HiveConfig):
     logger.info(f"Applying experiment '{name}' on Kubernetes...")
 
@@ -107,19 +107,25 @@ def deploy(op: str, client: ApiClient, name: str, config: HiveConfig):
                 body["spec"]["evaluator"]["image"] = current_exp["spec"]["evaluator"]["image"]
 
             resp = client.patch_namespaced_custom_object(
-                group=GROUP, version=VERSION, namespace=NAMESPACE, plural=RESOURCE_PLURAL, name=name, body=body
+                group=GROUP,
+                version=VERSION,
+                namespace=NAMESPACE,
+                plural=RESOURCE_PLURAL,
+                name=name,
+                body=body,
             )
             logger.info(
                 f"Experiment '{name}' updated successfully on Kubernetes with name {resp['metadata']['name']}."
             )
         else:
-            raise ValueError(f"Unsupported operation: {op}. Supported operations are 'CREATE' and 'UPDATE'.")
+            raise ValueError(
+                f"Unsupported operation: {op}. Supported operations are 'CREATE' and 'UPDATE'."
+            )
     except ApiException as e:
         logger.error(f"Failed to deploy experiment '{name}' on Kubernetes: {e}")
     except Exception as e:
-        logger.error(
-            f"An unexpected error occurred while deploying experiment '{name}': {e}"
-        )
+        logger.error(f"An unexpected error occurred while deploying experiment '{name}': {e}")
+
 
 def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
     """
@@ -144,9 +150,11 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
                 "image": config.evaluator.image,
                 "replicas": config.evaluator.replicas,
                 "timeout": config.evaluator.timeout,
+                "resources": config.evaluator.resources.model_dump(),
             },
             "coordinator": {
                 "image": config.coordinator.image,
+                "resources": config.coordinator.resources.model_dump(),
             },
         },
     }

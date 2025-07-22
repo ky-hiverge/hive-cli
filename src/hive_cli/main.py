@@ -21,6 +21,7 @@ def create_experiment(args):
 
     platform.create(config=config)
 
+
 def update_experiment(args):
     config = load_config(args.config)
     # Init the platform based on the config.
@@ -29,29 +30,33 @@ def update_experiment(args):
     platform.update(args.name, config=config)
     print(f"Experiment {args.name} updated successfully.")
 
+
 def delete_experiment(args):
     platform = PLATFORMS[args.platform](args.platform)
     platform.delete(args.name)
+
 
 def show_experiment(args):
     platform = PLATFORMS[args.platform](args.platform)
     platform.show_experiments(args)
 
-def main():
-    BLUE = "\033[94m"
-    RESET = "\033[0m"
 
-    # Let's only show this when running the hive init command.
-    ascii_art = r"""
-     ███          █████   █████  ███
-    ░░░███       ░░███   ░░███  ░░░
-      ░░░███      ░███    ░███  ████  █████ █████  ██████
-        ░░░███    ░███████████ ░░███ ░░███ ░░███  ███░░███
-         ███░     ░███░░░░░███  ░███  ░███  ░███ ░███████
-       ███░       ░███    ░███  ░███  ░░███ ███  ░███░░░
-     ███░         █████   █████ █████  ░░█████   ░░██████
-    ░░░          ░░░░░   ░░░░░ ░░░░░    ░░░░░     ░░░░░░
-    """
+def main():
+    # TODO: display the ascii art properly.
+    # BLUE = "\033[94m"
+    # RESET = "\033[0m"
+
+    # # Let's only show this when running the hive init command.
+    # ascii_art = r"""
+    #  ███          █████   █████  ███
+    # ░░░███       ░░███   ░░███  ░░░
+    #   ░░░███      ░███    ░███  ████  █████ █████  ██████
+    #     ░░░███    ░███████████ ░░███ ░░███ ░░███  ███░░███
+    #      ███░     ░███░░░░░███  ░███  ░███  ░███ ░███████
+    #    ███░       ░███    ░███  ░███  ░░███ ███  ░███░░░
+    #  ███░         █████   █████ █████  ░░█████   ░░██████
+    # ░░░          ░░░░░   ░░░░░ ░░░░░    ░░░░░     ░░░░░░
+    # """
 
     # print(f"{BLUE}{ascii_art}{RESET}")
 
@@ -66,8 +71,13 @@ def main():
     parser_create = subparsers.add_parser("create", help="Create resources")
     create_subparsers = parser_create.add_subparsers(dest="create_target")
 
-    parser_create_exp = create_subparsers.add_parser("experiment", aliases=["exp"], help="Create a new experiment")
-    parser_create_exp.add_argument("name", help="Name of the experiment, if it ends with '-', a timestamp will be appended. Example: 'exp-' will become 'exp-2023-10-01-123456'")
+    parser_create_exp = create_subparsers.add_parser(
+        "experiment", aliases=["exp"], help="Create a new experiment"
+    )
+    parser_create_exp.add_argument(
+        "name",
+        help="Name of the experiment, if it ends with '-', a timestamp will be appended. Example: 'exp-' will become 'exp-2023-10-01-123456'",
+    )
     parser_create_exp.add_argument("-f", "--config", required=True, help="Path to the config file")
     parser_create_exp.set_defaults(func=create_experiment)
 
@@ -75,7 +85,9 @@ def main():
     parser_update = subparsers.add_parser("update", help="Update resources")
     update_subparsers = parser_update.add_subparsers(dest="update_target")
 
-    parser_update_exp = update_subparsers.add_parser("experiment", aliases=["exp"], help="Update an experiment")
+    parser_update_exp = update_subparsers.add_parser(
+        "experiment", aliases=["exp"], help="Update an experiment"
+    )
     parser_update_exp.add_argument("name", help="Name of the experiment")
     parser_update_exp.add_argument("-f", "--config", required=True, help="Path to the config file")
     parser_update_exp.set_defaults(func=update_experiment)
@@ -83,7 +95,9 @@ def main():
     # delete command
     parser_delete = subparsers.add_parser("delete", help="Delete resources")
     delete_subparsers = parser_delete.add_subparsers(dest="delete_target")
-    parser_delete_exp = delete_subparsers.add_parser("experiment", aliases=["exp"], help="Delete an experiment")
+    parser_delete_exp = delete_subparsers.add_parser(
+        "experiment", aliases=["exp"], help="Delete an experiment"
+    )
     parser_delete_exp.add_argument("name", help="Name of the experiment")
     parser_delete_exp.add_argument(
         "-p",
@@ -97,7 +111,9 @@ def main():
     # show command
     parser_show = subparsers.add_parser("show", help="Show resources")
     show_subparsers = parser_show.add_subparsers(dest="show_target")
-    parser_show_exp = show_subparsers.add_parser("experiments", aliases=["exps"], help="Show experiments")
+    parser_show_exp = show_subparsers.add_parser(
+        "experiments", aliases=["exps"], help="Show experiments"
+    )
     parser_show_exp.add_argument(
         "-p",
         "--platform",

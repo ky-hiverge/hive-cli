@@ -2,6 +2,8 @@ from kubernetes.client.api_client import ApiClient
 from kubernetes.client.rest import ApiException
 from rich.console import Console
 from rich.table import Table
+from kubernetes import client
+from kubernetes import config as k8s_config
 
 from hive_cli.config import HiveConfig
 from hive_cli.platform.base import Platform
@@ -20,18 +22,24 @@ class K8sPlatform(Platform):
     def __init__(self, name: str):
         super().__init__(name)
 
+        # Load the kube config.
+        # This assumes you have a kubeconfig file at the default location (~/.kube/config)
+        # TODO: make this configurable if needed.
+        k8s_config.load_kube_config()
+        self.client = client.CustomObjectsApi()
+
     def create(self, config: HiveConfig):
         logger.info(f"Creating experiment '{self.experiment_name}' on Kubernetes...")
 
         config = self.setup_environment(config)
-        deploy("CREATE", self.k8s_client, self.experiment_name, config)
+        deploy("CREATE", self.client, self.experiment_name, config)
 
         logger.info(f"Launch experiment '{self.experiment_name}' successfully on Kubernetes.")
 
     def update(self, name: str, config: HiveConfig):
         logger.info(f"Updating experiment '{name}' on Kubernetes...")
 
-        deploy("UPDATE", self.k8s_client, name, config)
+        deploy("UPDATE", self.client, name, config)
 
         logger.info(f"Launch experiment '{name}' successfully on Kubernetes.")
 
@@ -39,7 +47,7 @@ class K8sPlatform(Platform):
         logger.info(f"Deleting experiment '{name}' on Kubernetes...")
         try:
             # Attempt to delete the experiment by its name
-            self.k8s_client.delete_namespaced_custom_object(
+            self.client.delete_namespaced_custom_object(
                 group=GROUP,
                 version=VERSION,
                 namespace=NAMESPACE,
@@ -56,7 +64,7 @@ class K8sPlatform(Platform):
         logger.info(f"Logging in to hive on {args.platform} platform...")
 
     def show_experiments(self, args):
-        resp = self.k8s_client.list_namespaced_custom_object(
+        resp = self.client.list_namespaced_custom_object(
             group=GROUP,
             version=VERSION,
             namespace=NAMESPACE,
@@ -66,16 +74,19 @@ class K8sPlatform(Platform):
         table = Table(show_header=True, header_style="bold", box=None, show_lines=False)
         table.add_column("Name")
         table.add_column("Status")
+        table.add_column("EvaluatorNum")
         table.add_column("Age")
 
         for item in resp.get("items", []):
             metadata = item.get("metadata", {})
             status = item.get("status", {}).get("phase", "Unknown")
             age = humanize_time(metadata.get("creationTimestamp"))
+            num = item.get("spec", {}).get("evaluator", {}).get("replicas", 0)
 
             table.add_row(
                 metadata.get("name", "Unknown"),
                 status,
+                f"{num}",
                 age if age else "N/A",
             )
 

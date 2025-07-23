@@ -33,7 +33,20 @@ source start.sh
 
 - kubectl installed
 - kubeconfig file (~/.kube/config) to communicate with your cluster
-- For GCP users, ensure you have `gcloud` installed and logged in to your GCP account.
+- For GCP users:
+  - Ensure you have `gcloud` installed and logged in to your GCP account,
+    because Hive CLI will build and push Docker images to GCP Container Registry.
+  - Create a Kubernetes Secret `hive-image-puller` with image pull credentials, basically you should create a service account [here](https://console.cloud.google.com/iam-admin/serviceaccounts), and then download the JSON key file, you may be asked to disable the `Disable service account creation` and `Disable service account key creation` policies. Finally, use the following command to create the secret:
+
+    ```bash
+    kubectl create secret docker-registry hive-image-puller \
+      --docker-server=gcr.io \
+      --docker-username=_json_key \
+      --docker-password="$(cat <your-credential-jsonfile>)" \
+      --docker-email=<your-email-address>
+    ```
+
+## Usage
 
 Support commands:
 ```

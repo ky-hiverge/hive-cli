@@ -37,6 +37,7 @@ class WanDBConfig(BaseModel):
 
 
 class GCPConfig(BaseModel):
+    enabled: bool = False
     project_id: str
 
 

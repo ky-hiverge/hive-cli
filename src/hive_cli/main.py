@@ -112,7 +112,7 @@ def main():
     parser_show = subparsers.add_parser("show", help="Show resources")
     show_subparsers = parser_show.add_subparsers(dest="show_target")
     parser_show_exp = show_subparsers.add_parser(
-        "experiments", aliases=["exps"], help="Show experiments"
+        "experiments", aliases=["exp", "exps"], help="Show experiments"
     )
     parser_show_exp.add_argument(
         "-p",

@@ -12,4 +12,5 @@ wandb:
   enabled: false
 # cloud vendor configuration
 gcp:
+  enabled: true
   project_id: runsandbox-449400

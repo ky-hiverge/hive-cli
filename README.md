@@ -49,12 +49,41 @@ source start.sh
 ## Usage
 
 Support commands:
+
+### Create
+
+`Create` command is used to create resources like experiments, e.g.:
+
+```bash
+hive create experiment my-experiment -f hive.yaml
 ```
-create              Create resources
-update              Update resources
-delete              Delete resources
+
+### Update
+
+`Update` command is used to update resources like experiments, e.g.:
+
+```bash
+hive update experiment my-experiment -f hive.yaml
 ```
+
+### Delete
+
+`Delete` command is used to delete resources like experiments, e.g.:
+
+```bash
+hive delete experiment my-experiment
+```
+
+### Show
+
+`Show` command is used to show resources like experiments, e.g.:
+
+```bash
+hive show experiments
+```
+
+### More
 
 See `hive -h` for more details.
 
-Also refer to `hive.yaml` for full configurations and `hive-mini.yaml` for a minimal example.
+Also refer to `hive.yaml` for full configurations and `hive-mini.yaml` for a minimal configuration example.

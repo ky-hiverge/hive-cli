@@ -56,3 +56,5 @@ delete              Delete resources
 ```
 
 See `hive -h` for more details.
+
+Also refer to `hive.yaml` for full configurations and `hive-mini.yaml` for a minimal example.

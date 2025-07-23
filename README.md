@@ -87,3 +87,9 @@ hive show experiments
 See `hive -h` for more details.
 
 Also refer to `hive.yaml` for full configurations and `hive-mini.yaml` for a minimal configuration example.
+
+## Development
+
+### Debugging
+
+Change the log level in `.env` file to `DEBUG` to see more detailed logs.

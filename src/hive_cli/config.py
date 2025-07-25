@@ -1,6 +1,8 @@
 from enum import Enum
 from typing import Optional
 
+from pydantic import BaseModel, field_validator
+
 import yaml
 from pydantic import BaseModel
 
@@ -55,6 +57,12 @@ class HiveConfig(BaseModel):
 
     # cloud vendor configuration
     gcp: Optional[GCPConfig] = None
+
+    @field_validator("project_name")
+    def must_be_lowercase(cls, v):
+        if not v.islower():
+            raise ValueError("project_name must be all lowercase")
+        return v
 
 
 def load_config(file_path: str) -> HiveConfig:

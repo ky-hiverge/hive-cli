@@ -1,4 +1,7 @@
 import subprocess
+import logging
+
+from hive_cli.utils.logger import logger
 
 
 def build_image(
@@ -24,10 +27,15 @@ def build_image(
         cmd.append("--push")
 
     try:
+        if logger.isEnabledFor(logging.DEBUG):
+            capture_output = False
+        else:
+            capture_output = True
+
         subprocess.run(
             cmd,
             check=True,
-            capture_output=True,
+            capture_output=capture_output,
             text=True,
         )
     except subprocess.CalledProcessError as e:

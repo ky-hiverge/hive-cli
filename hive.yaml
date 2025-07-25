@@ -13,7 +13,7 @@ evaluator:
   timeout: 60
   resources:
     requests:
-      cpu: "200m"
+      cpu: "100m"
       memory: "256Mi"
     limits:
       cpu: "500m"
@@ -22,7 +22,7 @@ coordinator:
   image: hive-coordinator:latest
   resources:
     requests:
-      cpu: "200m"
+      cpu: "100m"
       memory: "256Mi"
     limits:
       cpu: "500m"

@@ -90,6 +90,7 @@ class Platform(Runtime, ABC):
         git.clone_repo(config.repo.url, dest, config.repo.branch)
 
         if not (dest / "Dockerfile").exists():
+            logger.debug(f"No Dockerfile found in {dest}, generating one.")
             # Generate Dockerfile for the experiment
             generate_dockerfile(dest)
 

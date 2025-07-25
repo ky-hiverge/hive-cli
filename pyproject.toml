@@ -38,7 +38,7 @@ hive = "hive_cli.main:main"
 
 [tool.ruff]
 line-length = 100
-exclude = ["libraries"]
+exclude = ["libs"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]

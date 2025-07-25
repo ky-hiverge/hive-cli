@@ -80,7 +80,7 @@ class Platform(Runtime, ABC):
 
         # TODO: refactor this part to use an image by default rather than build from the scratch.
         shutil.copytree(
-            "./libraries",
+            "./libs",
             Path("./tmp") / temp_dir,
             dirs_exist_ok=True,
         )

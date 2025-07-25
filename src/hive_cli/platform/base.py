@@ -57,7 +57,7 @@ class Platform(Runtime, ABC):
             image_name = self.prepare_images(config, temp_dir, push=True)
 
             # Populate related fields to the config, only allow to update here.
-            config.evaluator.image = image_name
+            config.sandbox.image = image_name
 
         logger.debug(f"The updated HiveConfig: {config}")
         return config
@@ -108,8 +108,8 @@ class Platform(Runtime, ABC):
         # TODO: what if we don't use GCP?
         image_name = f"gcr.io/{config.gcp.project_id}/{config.project_name}:{self.experiment_name}"
 
-        logger.debug(f"Building evaluator image {image_name} in {temp_dir} with push={push}")
-        # build the evaluator image
+        logger.debug(f"Building sandbox image {image_name} in {temp_dir} with push={push}")
+        # build the sandbox image
         build_image(
             image=image_name,
             platforms="linux/amd64",

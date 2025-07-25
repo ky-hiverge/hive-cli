@@ -74,14 +74,14 @@ class K8sPlatform(Platform):
         table = Table(show_header=True, header_style="bold", box=None, show_lines=False)
         table.add_column("Name")
         table.add_column("Status")
-        table.add_column("EvaluatorNum")
+        table.add_column("SandboxNum")
         table.add_column("Age")
 
         for item in resp.get("items", []):
             metadata = item.get("metadata", {})
             status = item.get("status", {}).get("phase", "Unknown")
             age = humanize_time(metadata.get("creationTimestamp"))
-            num = item.get("spec", {}).get("evaluator", {}).get("replicas", 0)
+            num = item.get("spec", {}).get("sandbox", {}).get("replicas", 0)
 
             table.add_row(
                 metadata.get("name", "Unknown"),
@@ -114,8 +114,8 @@ def deploy(op: str, client: ApiClient, name: str, config: HiveConfig):
             )
 
             # Populate some fields manually because they're generated in creation.
-            if body["spec"]["evaluator"].get("image") is None:
-                body["spec"]["evaluator"]["image"] = current_exp["spec"]["evaluator"]["image"]
+            if body["spec"]["sandbox"].get("image") is None:
+                body["spec"]["sandbox"]["image"] = current_exp["spec"]["sandbox"]["image"]
 
             resp = client.patch_namespaced_custom_object(
                 group=GROUP,
@@ -157,11 +157,11 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
             "namespace": namespace,
         },
         "spec": {
-            "evaluator": {
-                "image": config.evaluator.image,
-                "replicas": config.evaluator.replicas,
-                "timeout": config.evaluator.timeout,
-                "resources": config.evaluator.resources.model_dump(),
+            "sandbox": {
+                "image": config.sandbox.image,
+                "replicas": config.sandbox.replicas,
+                "timeout": config.sandbox.timeout,
+                "resources": config.sandbox.resources.model_dump(),
             },
             "coordinator": {
                 "image": config.coordinator.image,

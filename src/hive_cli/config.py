@@ -22,7 +22,7 @@ class CoordinatorConfig(BaseModel):
     resources: ResourceConfig = ResourceConfig()
 
 
-class EvaluatorConfig(BaseModel):
+class SandboxConfig(BaseModel):
     image: Optional[str] = None
     replicas: int = 1
     timeout: int = 60
@@ -52,7 +52,7 @@ class HiveConfig(BaseModel):
 
     repo: RepoConfig
     coordinator: CoordinatorConfig = CoordinatorConfig()
-    evaluator: EvaluatorConfig
+    sandbox: SandboxConfig
     wandb: WanDBConfig
 
     # cloud vendor configuration

@@ -18,15 +18,6 @@ sandbox:
     limits:
       cpu: "500m"
       memory: "512Mi"
-coordinator:
-  image: hive-coordinator:latest
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "256Mi"
-    limits:
-      cpu: "500m"
-      memory: "512Mi"
 wandb:
   enabled: false
 # cloud vendor configuration

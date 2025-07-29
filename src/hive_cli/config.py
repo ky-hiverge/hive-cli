@@ -17,11 +17,6 @@ class ResourceConfig(BaseModel):
     limits: Optional[dict] = {"cpu": "500m", "memory": "512Mi"}
 
 
-class CoordinatorConfig(BaseModel):
-    image: str = "hiverge/coordinator:latest"
-    resources: ResourceConfig = ResourceConfig()
-
-
 class SandboxConfig(BaseModel):
     image: Optional[str] = None
     replicas: int = 1
@@ -51,7 +46,6 @@ class HiveConfig(BaseModel):
     platform: PlatformType = PlatformType.K8S
 
     repo: RepoConfig
-    coordinator: CoordinatorConfig = CoordinatorConfig()
     sandbox: SandboxConfig
     wandb: WanDBConfig
 

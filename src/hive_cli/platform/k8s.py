@@ -163,9 +163,5 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
                 "timeout": config.sandbox.timeout,
                 "resources": config.sandbox.resources.model_dump(),
             },
-            "coordinator": {
-                "image": config.coordinator.image,
-                "resources": config.coordinator.resources.model_dump(),
-            },
         },
     }

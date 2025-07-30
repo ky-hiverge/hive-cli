@@ -1,6 +1,7 @@
 """A simple Python sandbox server that executes Python functions."""
 
 import logging
+from math import log
 import os
 import subprocess
 import tempfile
@@ -37,16 +38,22 @@ def execute_python_function(
 
     # Run the Python program
     try:
+      logger.info("fffffffff")
+
       output = common_tools.run_command(
         ["python", evaluation_script] + args, temp_dir, timeout, memory_limit
       )
       return output
     except common_tools.FunctionExecutionError as e:
       try:
+        logger.info("eeeeeeeeeeeee")
+
         # If the script leaves checkpointed json data, find and return it
         output = common_tools.run_command(["cat", "checkpoint.json"], temp_dir)
         return f'{{"output": {output}, "metainfo": "Checkpoint"}}'
       except common_tools.FunctionExecutionError:
+        logger.info("Checkpoint not found, returning original error.")
+
         raise common_tools.FunctionExecutionError(
           f"Execution failed: {e}"
         ) from e
@@ -63,6 +70,7 @@ def run_function():
   """Run the Python function provided in the request."""
   try:
     if not request.is_json:
+      logger.error("Request content type is not application/json")
       return jsonify(
         {"output": None, "metainfo": "Content-Type must be application/json"}
       ), 400
@@ -88,6 +96,7 @@ def run_function():
     return result, 200
 
   except common_tools.FunctionExecutionError as e:
+    logger.error("Function execution failed: %s", e)
     return jsonify({"output": None, "metainfo": str(e)}), 400
   except subprocess.SubprocessError as e:
     logger.error("Unexpected error: %s", e)

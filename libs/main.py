@@ -38,25 +38,19 @@ def execute_python_function(
 
     # Run the Python program
     try:
-      logger.info("fffffffff")
-
       output = common_tools.run_command(
         ["python", evaluation_script] + args, temp_dir, timeout, memory_limit
       )
       return output
     except common_tools.FunctionExecutionError as e:
       try:
-        logger.info("eeeeeeeeeeeee")
-
         # If the script leaves checkpointed json data, find and return it
         output = common_tools.run_command(["cat", "checkpoint.json"], temp_dir)
         return f'{{"output": {output}, "metainfo": "Checkpoint"}}'
-      except common_tools.FunctionExecutionError:
-        logger.info("Checkpoint not found, returning original error.")
-
+      except common_tools.FunctionExecutionError as e:
         raise common_tools.FunctionExecutionError(
           f"Execution failed: {e}"
-        ) from e
+        )
 
 
 @app.route("/health", methods=["GET"])

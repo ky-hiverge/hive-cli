@@ -43,6 +43,9 @@ def execute_python_function(
       )
       return output
     except common_tools.FunctionExecutionError as e:
+      logger.info(
+        "Function execution failed: %s. Attempting to read checkpoint data.", e
+      )
       try:
         # If the script leaves checkpointed json data, find and return it
         output = common_tools.run_command(["cat", "checkpoint.json"], temp_dir)

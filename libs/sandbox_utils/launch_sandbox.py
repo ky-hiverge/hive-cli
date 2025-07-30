@@ -6,7 +6,6 @@ import os
 import subprocess
 from datetime import datetime
 
-from hive.logger import logger
 from sandbox_utils import common_tools
 
 
@@ -150,21 +149,12 @@ def launch_sandbox(
 ) -> str:
   """Build, push, and deploy the sandbox."""
 
-  logger.runtime.info(
-    "Launching sandbox %s with Dockerfile %s in project %s",
-    sandbox_name,
-    dockerfile_path,
-    project_id,
-  )
-
   sandbox_name = sandbox_name.replace("_", "-").lower()
   image_name = f"{project_id}/{sandbox_name}"
   if where_to_deploy != "local":
     image_name = f"gcr.io/{image_name}"
 
-  logger.runtime.debug(
-    "Building image name %s for sandbox %s", image_name, sandbox_name
-  )
+
   build_image(
     dockerfile_path,
     image_name,
@@ -173,9 +163,6 @@ def launch_sandbox(
   )
 
   if where_to_deploy == "local":
-    logger.runtime.debug(
-      "Running sandbox locally with image %s", image_name
-    )
     subprocess.Popen(
       ["docker", "run", "-p", "8080:8080", image_name],
       stdout=subprocess.DEVNULL,
@@ -183,23 +170,12 @@ def launch_sandbox(
     )
     # Wait for the server to start
     common_tools.wait_for_url("http://localhost:8080/health")
-    logger.runtime.debug(
-      "Sandbox is running locally at http://localhost:8080"
-    )
     return "http://localhost:8080"
 
   # If here, we are deploying to Google Cloud Run
   # TODO(Add option to deploy to GKE)
-  logger.runtime.debug(
-    "Pushing Docker image %s to Google Container Registry", image_name
-  )
   push_image(image_name)
 
-  logger.runtime.debug(
-    "Deploying sandbox %s on Google Cloud Run with project %s",
-    sandbox_name,
-    project_id,
-  )
   return deploy_cloud_run_sandbox(
     project_id, sandbox_name, deploy_optional_args
   )

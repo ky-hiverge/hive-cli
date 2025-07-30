@@ -5,7 +5,7 @@
 project_name: beluga-direct-plan-project
 platform: k8s
 repo:
-  url: https://github.com/hiverge/beluga-direct-plan-project.git
+  address: https://github.com/hiverge/beluga-direct-plan-project.git
 sandbox:
   # image will be set automatically after building the image
   # image: <>

@@ -86,8 +86,8 @@ class Platform(Runtime, ABC):
         )
         dest = Path(temp_dir) / "repo"
 
-        logger.debug(f"Cloning repository {config.repo.url} to {dest}")
-        git.clone_repo(config.repo.url, dest, config.repo.branch)
+        logger.debug(f"Cloning repository {config.repo.address} to {dest}")
+        git.clone_repo(config.repo.address, dest, config.repo.branch)
 
         if not (dest / "Dockerfile").exists():
             logger.debug(f"No Dockerfile found in {dest}, generating one.")

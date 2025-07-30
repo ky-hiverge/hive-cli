@@ -25,7 +25,7 @@ class SandboxConfig(BaseModel):
 
 
 class RepoConfig(BaseModel):
-    url: str
+    address: str
     branch: str = "main"
 
 

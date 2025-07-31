@@ -74,19 +74,20 @@ class K8sPlatform(Platform):
         table = Table(show_header=True, header_style="bold", box=None, show_lines=False)
         table.add_column("Name")
         table.add_column("Status")
-        table.add_column("SandboxNum")
+        table.add_column("Sandboxes")
         table.add_column("Age")
 
         for item in resp.get("items", []):
             metadata = item.get("metadata", {})
-            status = item.get("status", {}).get("phase", "Unknown")
             age = humanize_time(metadata.get("creationTimestamp"))
-            num = item.get("spec", {}).get("sandbox", {}).get("replicas", 0)
+            status = item.get("status", {}).get("phase", "Unknown")
+            replicas = item.get("status", {}).get("sandboxReplicas", 0)
+            unavailable_replicas = item.get("status", {}).get("sandboxUnavailableReplicas", 0)
 
             table.add_row(
                 metadata.get("name", "Unknown"),
                 status,
-                f"{num}",
+                f"{replicas-unavailable_replicas}/{replicas}",
                 age if age else "N/A",
             )
 

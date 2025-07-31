@@ -44,13 +44,16 @@ def execute_python_function(
       return output
     except common_tools.FunctionExecutionError as e:
       logger.info(
-        "Function execution failed: %s. Attempting to read checkpoint data.", e
+        "Run command failed: %s. Attempting to read checkpoint data.", e
       )
       try:
         # If the script leaves checkpointed json data, find and return it
         output = common_tools.run_command(["cat", "checkpoint.json"], temp_dir)
         return f'{{"output": {output}, "metainfo": "Checkpoint"}}'
-      except common_tools.FunctionExecutionError as e:
+      except common_tools.FunctionExecutionError as ee:
+        logger.error(
+          "Failed to read checkpoint data: %s. Returning original error.", ee
+        )
         raise common_tools.FunctionExecutionError(
           f"Execution failed: {e}"
         )
@@ -80,7 +83,7 @@ def run_function():
     args = request.json.get("args", ())
     evaluation_script = request.json.get("evaluation_script", "evaluator.py")
 
-    logging.info(
+    logger.info(
       "Executing code with timeout=%s, memory_limit=%s, evaluation_script=%s",
       timeout,
       memory_limit,

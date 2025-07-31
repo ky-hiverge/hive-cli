@@ -16,8 +16,8 @@ sandbox:
       cpu: "100m"
       memory: "256Mi"
     limits:
-      cpu: "500m"
-      memory: "512Mi"
+      cpu: "1"
+      memory: "2Gi"
 wandb:
   enabled: false
 # cloud vendor configuration

@@ -51,7 +51,7 @@ def execute_python_function(
         output = common_tools.run_command(["cat", "checkpoint.json"], temp_dir)
         return f'{{"output": {output}, "metainfo": "Checkpoint"}}'
       except common_tools.FunctionExecutionError as ee:
-        logger.error(
+        logger.info(
           "Failed to read checkpoint data: %s. Returning original error.", ee
         )
         raise common_tools.FunctionExecutionError(

@@ -1,10 +1,8 @@
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel, field_validator
-
 import yaml
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 
 class PlatformType(str, Enum):

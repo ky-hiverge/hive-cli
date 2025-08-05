@@ -1,5 +1,5 @@
-import subprocess
 import logging
+import subprocess
 
 from hive_cli.utils.logger import logger
 

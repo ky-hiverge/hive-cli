@@ -1,9 +1,9 @@
+from kubernetes import client
+from kubernetes import config as k8s_config
 from kubernetes.client.api_client import ApiClient
 from kubernetes.client.rest import ApiException
 from rich.console import Console
 from rich.table import Table
-from kubernetes import client
-from kubernetes import config as k8s_config
 
 from hive_cli.config import HiveConfig
 from hive_cli.platform.base import Platform
@@ -87,7 +87,7 @@ class K8sPlatform(Platform):
             table.add_row(
                 metadata.get("name", "Unknown"),
                 status,
-                f"{replicas-unavailable_replicas}/{replicas}",
+                f"{replicas - unavailable_replicas}/{replicas}",
                 age if age else "N/A",
             )
 

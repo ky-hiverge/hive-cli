@@ -43,6 +43,8 @@ class HiveConfig(BaseModel):
         str  # project_name is for a specific project, like the beluga-direct-plan-project.
     )
 
+    coordinator_config_name: str = "default-coordinator-config"
+
     platform: PlatformType = PlatformType.K8S
 
     repo: RepoConfig

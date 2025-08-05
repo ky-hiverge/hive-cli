@@ -3,6 +3,7 @@
 # TODO: in the future, we'll generate it automatically with `hive init`.
 
 project_name: beluga-direct-plan-project
+coordinator_config_name: default-coordinator-config
 platform: k8s
 repo:
   address: https://github.com/hiverge/beluga-direct-plan-project.git

@@ -158,6 +158,7 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
             "namespace": namespace,
         },
         "spec": {
+            "coordinatorConfigName": config.coordinator_config_name,
             "sandbox": {
                 "image": config.sandbox.image,
                 "replicas": config.sandbox.replicas,

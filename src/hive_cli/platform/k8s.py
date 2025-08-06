@@ -30,18 +30,12 @@ class K8sPlatform(Platform):
 
     def create(self, config: HiveConfig):
         logger.info(f"Creating experiment '{self.experiment_name}' on Kubernetes...")
-
         config = self.setup_environment(config)
         deploy("CREATE", self.client, self.experiment_name, config)
 
-        logger.info(f"Launch experiment '{self.experiment_name}' successfully on Kubernetes.")
-
     def update(self, name: str, config: HiveConfig):
         logger.info(f"Updating experiment '{name}' on Kubernetes...")
-
         deploy("UPDATE", self.client, name, config)
-
-        logger.info(f"Launch experiment '{name}' successfully on Kubernetes.")
 
     def delete(self, name: str):
         logger.info(f"Deleting experiment '{name}' on Kubernetes...")
@@ -138,7 +132,6 @@ def deploy(op: str, client: ApiClient, name: str, config: HiveConfig):
     except Exception as e:
         logger.error(f"An unexpected error occurred while deploying experiment '{name}': {e}")
 
-
 def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
     """
     Constructs a Kubernetes custom resource definition (CRD) for an experiment.
@@ -164,6 +157,11 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
                 "replicas": config.sandbox.replicas,
                 "timeout": config.sandbox.timeout,
                 "resources": config.sandbox.resources.model_dump(),
+            },
+            "repo": {
+                "url": config.repo.url,
+                "branch": config.repo.branch,
+                "evaluationScript": config.repo.evaluation_script,
             },
         },
     }

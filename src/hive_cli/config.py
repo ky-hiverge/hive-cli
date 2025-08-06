@@ -21,11 +21,10 @@ class SandboxConfig(BaseModel):
     timeout: int = 60
     resources: ResourceConfig = ResourceConfig()
 
-
 class RepoConfig(BaseModel):
-    address: str
+    url: str
     branch: str = "main"
-
+    evaluation_script: str = "evaluator.py"
 
 class WanDBConfig(BaseModel):
     enabled: bool = False
@@ -36,12 +35,16 @@ class GCPConfig(BaseModel):
     project_id: str
 
 
+class DashboardConfig(BaseModel):
+    enabled: bool = False
+
 class HiveConfig(BaseModel):
     project_name: (
         str  # project_name is for a specific project, like the beluga-direct-plan-project.
     )
 
     coordinator_config_name: str = "default-coordinator-config"
+    dashboard: DashboardConfig
 
     platform: PlatformType = PlatformType.K8S
 

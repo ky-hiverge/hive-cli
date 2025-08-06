@@ -1,3 +1,4 @@
+import os
 import shutil
 import tempfile
 from abc import ABC, abstractmethod
@@ -86,8 +87,8 @@ class Platform(Runtime, ABC):
         )
         dest = Path(temp_dir) / "repo"
 
-        logger.debug(f"Cloning repository {config.repo.address} to {dest}")
-        git.clone_repo(config.repo.address, dest, config.repo.branch)
+        git.clone_repo(config.repo.url, dest, config.repo.branch)
+        logger.debug(f"Cloning repository {config.repo.url} to {dest}, the tree structure of the directory: {os.listdir('.')}, the tree structure of the {dest} directory: {os.listdir(dest)}")
 
         if not (dest / "Dockerfile").exists():
             logger.debug(f"No Dockerfile found in {dest}, generating one.")
@@ -98,7 +99,6 @@ class Platform(Runtime, ABC):
         # build the repository image first
         build_image(
             image="repo-image:latest",
-            platforms="linux/amd64",
             context=dest,
             dockerfile=dest / "Dockerfile",
             # this is a temporary image, so we don't push it
@@ -112,7 +112,6 @@ class Platform(Runtime, ABC):
         # build the sandbox image
         build_image(
             image=image_name,
-            platforms="linux/amd64",
             context=temp_dir,
             dockerfile=f"{temp_dir}/Dockerfile",
             push=push,
@@ -124,6 +123,7 @@ class Platform(Runtime, ABC):
         return image_name
 
 
+# copied from the original hiverge project.
 def generate_dockerfile(dest: Path) -> None:
     """Create a Dockerfile inside `dest`."""
     lines = [

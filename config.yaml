@@ -2,23 +2,27 @@
 # but you can use it as a template for your own configuration.
 # TODO: in the future, we'll generate it automatically with `hive init`.
 
-project_name: beluga-direct-plan-project
+project_name: llm-speedrun
 coordinator_config_name: default-coordinator-config
 platform: k8s
 repo:
-  address: https://github.com/hiverge/beluga-direct-plan-project.git
+  url: https://github.com/hiverge/llm-speedrun-project.git
+  branch: main
+  evaluation_script: cifar10-94-630/evaluator.py
 sandbox:
   # image will be set automatically after building the image
   # image: <>
-  replicas: 1
-  timeout: 60
+  replicas: 3
+  timeout: 120
   resources:
     requests:
-      cpu: "100m"
-      memory: "256Mi"
-    limits:
       cpu: "500m"
-      memory: "512Mi"
+      memory: "1Gi"
+    limits:
+      cpu: "2"
+      memory: "2Gi"
+dashboard:
+  enabled: false
 wandb:
   enabled: false
 # cloud vendor configuration

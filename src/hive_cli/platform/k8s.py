@@ -149,6 +149,11 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
     else:
         cloud_provider_name = "unknown"
 
+    if config.sandbox.envs is not None:
+        envs = [env.model_dump() for env in config.sandbox.envs]
+    else:
+        envs = None
+
     result =  {
         "apiVersion": f"{GROUP}/{VERSION}",
         "kind": RESOURCE,
@@ -163,7 +168,7 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
                 "replicas": config.sandbox.replicas,
                 "timeout": config.sandbox.timeout,
                 "resources": config.sandbox.resources.model_dump(),
-                "envs": config.envs,
+                "envs": envs,
             },
             "repo": {
                 "url": config.repo.url,

@@ -17,12 +17,16 @@ class ResourceConfig(BaseModel):
     shmsize: Optional[str] = None
 
 
+class EnvConfig(BaseModel):
+    name: str
+    value: str
+
 class SandboxConfig(BaseModel):
     image: Optional[str] = None
     replicas: int = 1
     timeout: int = 60
     resources: ResourceConfig = ResourceConfig()
-    envs: Optional[dict] = None  # Environment variables for the experiment
+    envs: Optional[list[EnvConfig]] = None
 
 
 class RepoConfig(BaseModel):

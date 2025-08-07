@@ -22,6 +22,8 @@ class SandboxConfig(BaseModel):
     replicas: int = 1
     timeout: int = 60
     resources: ResourceConfig = ResourceConfig()
+    envs: Optional[dict] = None  # Environment variables for the experiment
+
 
 class RepoConfig(BaseModel):
     url: str

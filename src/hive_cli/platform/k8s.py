@@ -163,6 +163,7 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
                 "replicas": config.sandbox.replicas,
                 "timeout": config.sandbox.timeout,
                 "resources": config.sandbox.resources.model_dump(),
+                "envs": config.envs,
             },
             "repo": {
                 "url": config.repo.url,
@@ -173,7 +174,7 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
             "cloudProvider": {
                 "spot": config.cloud_provider.spot,
                 "name": cloud_provider_name,
-            }
+            },
         },
     }
 

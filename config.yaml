@@ -9,11 +9,10 @@ repo:
   url: https://github.com/hiverge/llm-speedrun-project.git
   branch: main
   evaluation_script: cifar10-94-630/evaluator.py
+  evolve_files_and_ranges: cifar10-94-630/main.py
 sandbox:
-  # image will be set automatically after building the image
-  # image: <>
   replicas: 3
-  timeout: 120
+  timeout: 1800
   resources:
     requests:
       cpu: "500m"
@@ -21,11 +20,15 @@ sandbox:
     limits:
       cpu: "2"
       memory: "2Gi"
+    shmsize: "4Gi"
+    accelerators: a100-40gb:1 # or a100-80gb:8
 dashboard:
   enabled: false
 wandb:
   enabled: false
 # cloud vendor configuration
-gcp:
-  enabled: true
-  project_id: runsandbox-449400
+cloud_provider:
+  spot: true
+  gcp:
+    enabled: true
+    project_id: runsandbox-449400

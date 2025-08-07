@@ -106,7 +106,7 @@ class Platform(Runtime, ABC):
         )
 
         # TODO: what if we don't use GCP?
-        image_name = f"gcr.io/{config.gcp.project_id}/{config.project_name}:{self.experiment_name}"
+        image_name = f"gcr.io/{config.cloud_provider.gcp.project_id}/{config.project_name}:{self.experiment_name}"
 
         logger.debug(f"Building sandbox image {image_name} in {temp_dir} with push={push}")
         # build the sandbox image

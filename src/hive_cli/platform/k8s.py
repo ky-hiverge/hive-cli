@@ -143,7 +143,13 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
     Returns:
         dict: A dictionary representing the CRD for the experiment.
     """
-    return {
+
+    if config.cloud_provider.gcp and config.cloud_provider.gcp.enabled:
+        cloud_provider_name = "gcp"
+    else:
+        cloud_provider_name = "unknown"
+
+    result =  {
         "apiVersion": f"{GROUP}/{VERSION}",
         "kind": RESOURCE,
         "metadata": {
@@ -162,6 +168,13 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
                 "url": config.repo.url,
                 "branch": config.repo.branch,
                 "evaluationScript": config.repo.evaluation_script,
+                "evolveFilesAndRanges": config.repo.evolve_files_and_ranges,
             },
+            "cloudProvider": {
+                "spot": config.cloud_provider.spot,
+                "name": cloud_provider_name,
+            }
         },
     }
+
+    return result

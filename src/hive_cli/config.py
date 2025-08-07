@@ -13,6 +13,8 @@ class PlatformType(str, Enum):
 class ResourceConfig(BaseModel):
     requests: Optional[dict] = {"cpu": "100m", "memory": "256Mi"}
     limits: Optional[dict] = {"cpu": "500m", "memory": "512Mi"}
+    accelerators: Optional[str] = None  # e.g., "a100-80gb:8"
+    shmsize: Optional[str] = None
 
 
 class SandboxConfig(BaseModel):
@@ -25,6 +27,7 @@ class RepoConfig(BaseModel):
     url: str
     branch: str = "main"
     evaluation_script: str = "evaluator.py"
+    evolve_files_and_ranges: str
 
 class WanDBConfig(BaseModel):
     enabled: bool = False
@@ -37,6 +40,10 @@ class GCPConfig(BaseModel):
 
 class DashboardConfig(BaseModel):
     enabled: bool = False
+
+class CloudProviderConfig(BaseModel):
+    spot: bool = False
+    gcp: Optional[GCPConfig] = None
 
 class HiveConfig(BaseModel):
     project_name: (
@@ -53,7 +60,7 @@ class HiveConfig(BaseModel):
     wandb: WanDBConfig
 
     # cloud vendor configuration
-    gcp: Optional[GCPConfig] = None
+    cloud_provider: CloudProviderConfig
 
     @field_validator("project_name")
     def must_be_lowercase(cls, v):

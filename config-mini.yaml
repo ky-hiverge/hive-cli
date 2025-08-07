@@ -3,11 +3,9 @@
 project_name: beluga-direct-plan-project
 repo:
   url: https://github.com/hiverge/beluga-direct-plan-project.git
+  evolve_files_and_ranges: main.py
 sandbox:
-  replicas: 2
-  timeout: 60
-wandb:
-  enabled: false
+  replicas: 1
 # cloud vendor configuration
 gcp:
   enabled: true

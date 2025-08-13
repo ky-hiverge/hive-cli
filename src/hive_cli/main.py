@@ -130,15 +130,19 @@ def main():
     )
     parser_show_exp.set_defaults(func=show_experiment)
 
-    # config command
-    parser_config = subparsers.add_parser("config", help="Manage Hive Configuration")
-    parser_config.add_argument(
+    # edit command
+    parser_edit = subparsers.add_parser("edit", help="Edit Hive configuration")
+    edit_subparsers = parser_edit.add_subparsers(dest="edit_target")
+    parser_edit_config = edit_subparsers.add_parser(
+        "config", help="Edit the Hive configuration file"
+    )
+    parser_edit_config.add_argument(
         "-f",
         "--config",
         default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"),
         help="Path to the config file, defaults to ~/.hive/sandbox-config.yaml",
     )
-    parser_config.set_defaults(func=config)
+    parser_edit_config.set_defaults(func=config)
 
     args = parser.parse_args()
     if hasattr(args, "func"):

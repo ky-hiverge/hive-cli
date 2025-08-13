@@ -1,4 +1,6 @@
 import argparse
+import os
+import subprocess
 
 from hive_cli.config import load_config
 from hive_cli.platform.k8s import K8sPlatform
@@ -40,6 +42,11 @@ def show_experiment(args):
     platform = PLATFORMS[args.platform](args.platform)
     platform.show_experiments(args)
 
+def config(args):
+    editor = os.environ.get("EDITOR", "vim")
+    subprocess.run([editor, args.config])
+    return
+
 
 def main():
     # TODO: display the ascii art properly.
@@ -78,7 +85,7 @@ def main():
         "name",
         help="Name of the experiment, if it ends with '-', a timestamp will be appended. Example: 'exp-' will become 'exp-2023-10-01-123456'",
     )
-    parser_create_exp.add_argument("-f", "--config", required=True, help="Path to the config file")
+    parser_create_exp.add_argument("-f", "--config", default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"), help="Path to the config file, default to ~/.hive/sandbox-config.yaml")
     parser_create_exp.set_defaults(func=create_experiment)
 
     # update command
@@ -89,7 +96,7 @@ def main():
         "experiment", aliases=["exp"], help="Update an experiment"
     )
     parser_update_exp.add_argument("name", help="Name of the experiment")
-    parser_update_exp.add_argument("-f", "--config", required=True, help="Path to the config file")
+    parser_update_exp.add_argument("-f", "--config", default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"), help="Path to the config file, default to ~/.hive/sandbox-config.yaml")
     parser_update_exp.set_defaults(func=update_experiment)
 
     # delete command
@@ -122,6 +129,16 @@ def main():
         help="Platform to use, k8s or on-prem, default to use k8s",
     )
     parser_show_exp.set_defaults(func=show_experiment)
+
+    # config command
+    parser_config = subparsers.add_parser("config", help="Manage Hive Configuration")
+    parser_config.add_argument(
+        "-f",
+        "--config",
+        default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"),
+        help="Path to the config file, defaults to ~/.hive/sandbox-config.yaml",
+    )
+    parser_config.set_defaults(func=config)
 
     args = parser.parse_args()
     if hasattr(args, "func"):

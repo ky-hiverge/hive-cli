@@ -19,7 +19,7 @@ sandbox:
       cpu: "2"
       memory: "2Gi"
     shmsize: "4Gi"
-    accelerators: a100-40gb:1 # or a100-80gb:8
+    accelerators: a100-40gb:1 # or a100-80gb:8 or h100:8
   envs:
     - name: LOCK_SANDBOX
       value: "true"

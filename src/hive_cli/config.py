@@ -1,9 +1,8 @@
 from enum import Enum
-from logging import config
 from typing import Optional
 
 import yaml
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class PlatformType(str, Enum):
@@ -22,6 +21,7 @@ class EnvConfig(BaseModel):
     name: str
     value: str
 
+
 class SandboxConfig(BaseModel):
     image: Optional[str] = None
     replicas: int = 1
@@ -36,21 +36,40 @@ class RepoConfig(BaseModel):
     evaluation_script: str = "evaluator.py"
     evolve_files_and_ranges: str
 
+
 class WanDBConfig(BaseModel):
     enabled: bool = False
 
 
 class GCPConfig(BaseModel):
     enabled: bool = False
-    project_id: str
+    project_id: str = Field(
+        default="runsandbox-449400",
+        description="The GCP project ID to use for the experiment.",
+    )
+    image_registry: str | None = Field(
+        default=None,
+        description="The GCP image registry to use for the experiment images. If not set, will use the default GCP registry.",
+    )
+
+
+class AWSConfig(BaseModel):
+    enabled: bool = False
+    image_registry: str | None = Field(
+        default=None,
+        description="The AWS image registry to use for the experiment images. If not set, will use the default AWS ECR registry.",
+    )
 
 
 class DashboardConfig(BaseModel):
     enabled: bool = False
 
+
 class CloudProviderConfig(BaseModel):
     spot: bool = False
     gcp: Optional[GCPConfig] = None
+    aws: Optional[AWSConfig] = None
+
 
 class HiveConfig(BaseModel):
     project_name: (
@@ -74,6 +93,25 @@ class HiveConfig(BaseModel):
         if not v.islower():
             raise ValueError("project_name must be all lowercase")
         return v
+
+    def model_post_init(self, __context):
+        if (
+            self.cloud_provider.gcp
+            and self.cloud_provider.gcp.enabled
+            and not self.cloud_provider.gcp.image_registry
+        ):
+            self.cloud_provider.gcp.image_registry = (
+                f"gcr.io/{self.cloud_provider.gcp.project_id}/{self.project_name}"
+            )
+
+        if (
+            self.cloud_provider.aws
+            and self.cloud_provider.aws.enabled
+            and not self.cloud_provider.aws.image_registry
+        ):
+            self.cloud_provider.aws.image_registry = (
+                f"621302123805.dkr.ecr.eu-north-1.amazonaws.com/hiverge/{self.project_name}"
+            )
 
 
 def load_config(file_path: str) -> HiveConfig:

@@ -88,7 +88,9 @@ class Platform(Runtime, ABC):
         dest = Path(temp_dir) / "repo"
 
         git.clone_repo(config.repo.url, dest, config.repo.branch)
-        logger.debug(f"Cloning repository {config.repo.url} to {dest}, the tree structure of the directory: {os.listdir('.')}, the tree structure of the {dest} directory: {os.listdir(dest)}")
+        logger.debug(
+            f"Cloning repository {config.repo.url} to {dest}, the tree structure of the directory: {os.listdir('.')}, the tree structure of the {dest} directory: {os.listdir(dest)}"
+        )
 
         if not (dest / "Dockerfile").exists():
             logger.debug(f"No Dockerfile found in {dest}, generating one.")
@@ -105,8 +107,14 @@ class Platform(Runtime, ABC):
             push=False,
         )
 
-        # TODO: what if we don't use GCP?
-        image_name = f"gcr.io/{config.cloud_provider.gcp.project_id}/{config.project_name}:{self.experiment_name}"
+        if config.cloud_provider.gcp and config.cloud_provider.gcp.enabled:
+            image_registry = config.cloud_provider.gcp.image_registry
+        elif config.cloud_provider.aws and config.cloud_provider.aws.enabled:
+            image_registry = config.cloud_provider.aws.image_registry
+        else:
+            raise ValueError("Unsupported cloud provider configuration. Please enable GCP or AWS.")
+
+        image_name = f"{image_registry}:{self.experiment_name}"
 
         logger.debug(f"Building sandbox image {image_name} in {temp_dir} with push={push}")
         # build the sandbox image

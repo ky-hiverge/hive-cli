@@ -132,6 +132,7 @@ def deploy(op: str, client: ApiClient, name: str, config: HiveConfig):
     except Exception as e:
         logger.error(f"An unexpected error occurred while deploying experiment '{name}': {e}")
 
+
 def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
     """
     Constructs a Kubernetes custom resource definition (CRD) for an experiment.
@@ -146,6 +147,8 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
 
     if config.cloud_provider.gcp and config.cloud_provider.gcp.enabled:
         cloud_provider_name = "gcp"
+    elif config.cloud_provider.aws and config.cloud_provider.aws.enabled:
+        cloud_provider_name = "aws"
     else:
         cloud_provider_name = "unknown"
 
@@ -154,7 +157,7 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
     else:
         envs = None
 
-    result =  {
+    result = {
         "apiVersion": f"{GROUP}/{VERSION}",
         "kind": RESOURCE,
         "metadata": {

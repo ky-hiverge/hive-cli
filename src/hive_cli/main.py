@@ -17,6 +17,23 @@ def init(args):
 
 
 def create_experiment(args):
+    BLUE = "\033[94m"
+    RESET = "\033[0m"
+
+    # Let's only show this when running the hive init command.
+    ascii_art = r"""
+     ███          █████   █████  ███
+    ░░░███       ░░███   ░░███  ░░░
+      ░░░███      ░███    ░███  ████  █████ █████  ██████
+        ░░░███    ░███████████ ░░███ ░░███ ░░███  ███░░███
+         ███░     ░███░░░░░███  ░███  ░███  ░███ ░███████
+       ███░       ░███    ░███  ░███  ░░███ ███  ░███░░░
+     ███░         █████   █████ █████  ░░█████   ░░██████
+    ░░░          ░░░░░   ░░░░░ ░░░░░    ░░░░░     ░░░░░░
+    """
+
+    print(f"{BLUE}{ascii_art}{RESET}")
+
     config = load_config(args.config)
     # Init the platform based on the config.
     platform = PLATFORMS[config.platform.value](args.name)
@@ -42,6 +59,7 @@ def show_experiment(args):
     platform = PLATFORMS[args.platform](args.platform)
     platform.show_experiments(args)
 
+
 def config(args):
     editor = os.environ.get("EDITOR", "vim")
     subprocess.run([editor, args.config])
@@ -49,24 +67,6 @@ def config(args):
 
 
 def main():
-    # TODO: display the ascii art properly.
-    # BLUE = "\033[94m"
-    # RESET = "\033[0m"
-
-    # # Let's only show this when running the hive init command.
-    # ascii_art = r"""
-    #  ███          █████   █████  ███
-    # ░░░███       ░░███   ░░███  ░░░
-    #   ░░░███      ░███    ░███  ████  █████ █████  ██████
-    #     ░░░███    ░███████████ ░░███ ░░███ ░░███  ███░░███
-    #      ███░     ░███░░░░░███  ░███  ░███  ░███ ░███████
-    #    ███░       ░███    ░███  ░███  ░░███ ███  ░███░░░
-    #  ███░         █████   █████ █████  ░░█████   ░░██████
-    # ░░░          ░░░░░   ░░░░░ ░░░░░    ░░░░░     ░░░░░░
-    # """
-
-    # print(f"{BLUE}{ascii_art}{RESET}")
-
     parser = argparse.ArgumentParser(description="Hive CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -85,7 +85,12 @@ def main():
         "name",
         help="Name of the experiment, if it ends with '-', a timestamp will be appended. Example: 'exp-' will become 'exp-2023-10-01-123456'",
     )
-    parser_create_exp.add_argument("-f", "--config", default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"), help="Path to the config file, default to ~/.hive/sandbox-config.yaml")
+    parser_create_exp.add_argument(
+        "-f",
+        "--config",
+        default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"),
+        help="Path to the config file, default to ~/.hive/sandbox-config.yaml",
+    )
     parser_create_exp.set_defaults(func=create_experiment)
 
     # update command
@@ -96,7 +101,12 @@ def main():
         "experiment", aliases=["exp"], help="Update an experiment"
     )
     parser_update_exp.add_argument("name", help="Name of the experiment")
-    parser_update_exp.add_argument("-f", "--config", default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"), help="Path to the config file, default to ~/.hive/sandbox-config.yaml")
+    parser_update_exp.add_argument(
+        "-f",
+        "--config",
+        default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"),
+        help="Path to the config file, default to ~/.hive/sandbox-config.yaml",
+    )
     parser_update_exp.set_defaults(func=update_experiment)
 
     # delete command

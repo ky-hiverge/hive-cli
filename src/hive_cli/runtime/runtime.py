@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class Runtime:
@@ -18,10 +18,8 @@ def generate_experiment_name(base_name: str) -> str:
 
     experiment_name = base_name
 
-    # TODO: replace with a hash value(code base) rather than the date,
-    # so for the same code base, the experiment name will be the same.
     if base_name.endswith("-"):
-        timestamp = datetime.now().strftime("%Y-%m-%d-%H%M%S")
+        timestamp = str(int(datetime.now(timezone.utc).timestamp()))
         experiment_name = f"{base_name}{timestamp}"
 
     return experiment_name

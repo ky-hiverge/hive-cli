@@ -87,13 +87,13 @@ class HiveConfig(BaseModel):
     )
 
     coordinator_config_name: str = "default-coordinator-config"
-    dashboard: DashboardConfig
+    dashboard: Optional[DashboardConfig] = None
 
     platform: PlatformType = PlatformType.K8S
 
     repo: RepoConfig
     sandbox: SandboxConfig
-    wandb: WanDBConfig
+    wandb: Optional[WanDBConfig] = None
 
     # cloud vendor configuration
     cloud_provider: CloudProviderConfig

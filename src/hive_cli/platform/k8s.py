@@ -1,4 +1,3 @@
-from logging import config
 from kubernetes import client
 from kubernetes import config as k8s_config
 from kubernetes.client.api_client import ApiClient
@@ -189,5 +188,11 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
             },
         },
     }
+
+    if config.dashboard:
+        result["spec"]["dashboard"] = {
+            "frontendImage": config.dashboard.frontend_image,
+            "backendImage": config.dashboard.backend_image,
+        }
 
     return result

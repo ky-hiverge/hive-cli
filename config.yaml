@@ -1,7 +1,7 @@
 # This is only an example configuration file for the Hive CLI.
 
 project_name: llm-speedrun
-token_path: ~/Desktop/HivergeAI/hive.kubeconfig
+token_path: /Desktop/HivergeAI/hive.kubeconfig
 coordinator_config_name: default-coordinator-config
 platform: k8s
 repo:
@@ -27,7 +27,8 @@ sandbox:
     - name: LOCK_SANDBOX
       value: "true"
 dashboard:
-  enabled: false
+  frontend_image: <image-name>
+  backend_image: <image-name>
 wandb:
   enabled: false
 # cloud vendor configuration

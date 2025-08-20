@@ -1,5 +1,5 @@
-from enum import Enum
 import os
+from enum import Enum
 from typing import Optional
 
 import yaml
@@ -67,7 +67,12 @@ class AWSConfig(BaseModel):
 
 
 class DashboardConfig(BaseModel):
-    enabled: bool = False
+    frontend_image: str = Field(
+        description="The Docker image to use for the dashboard frontend.",
+    )
+    backend_image: str = Field(
+        description="The Docker image to use for the dashboard backend.",
+    )
 
 
 class CloudProviderConfig(BaseModel):

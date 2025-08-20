@@ -15,7 +15,7 @@ Hive-CLI is a command-line interface for managing and deploying Hive agent and e
 
 ## Installation
 
-### Install via pip (TBD)
+### Install via pip (Not-Available Yet)
 
 ```bash
 pip install hive-cli
@@ -27,68 +27,46 @@ pip install hive-cli
 source start.sh
 ```
 
-## How to Run
+## How to run
 
-### Pre-requisites
+**Note**: Hive-CLI reads the configuration from a yaml file, by default it will look for the `~/.hive/config.yaml`. You can also specify a different configuration file using the `-f` option. Refer to the [config.yaml](./config.yaml) for examples.
 
-- kubectl installed
-- kubeconfig file (~/.kube/config) to communicate with your cluster
-- For GCP users:
-  - Ensure you have `gcloud` installed and logged in to your GCP account,
-    because Hive CLI will build and push Docker images to GCP Container Registry.
-  - Create a Kubernetes Secret `hive-image-puller` with image pull credentials, basically you should create a service account [here](https://console.cloud.google.com/iam-admin/serviceaccounts), and then download the JSON key file, you may be asked to disable the `Disable service account creation` and `Disable service account key creation` policies. Finally, use the following command to create the secret:
+Below we assume that you have a `~/.hive/config.yaml` file.
 
-    ```bash
-    kubectl create secret docker-registry hive-image-puller \
-      --docker-server=gcr.io \
-      --docker-username=_json_key \
-      --docker-password="$(cat <your-credential-jsonfile>)" \
-      --docker-email=<your-email-address>
-    ```
-
-## Usage
-
-Support commands:
-
-### Create
-
-`Create` command is used to create resources like experiments, e.g.:
+### Create an experiment
 
 ```bash
-hive create experiment my-experiment -f hive.yaml
+hive create exp my-experiment
 ```
 
-### Update
-
-`Update` command is used to update resources like experiments, e.g.:
+### List experiments
 
 ```bash
-hive update experiment my-experiment -f hive.yaml
+hive show exps
 ```
 
-### Delete
+### Delete an experiment
 
-`Delete` command is used to delete resources like experiments, e.g.:
 
 ```bash
-hive delete experiment my-experiment
+hive delete exp my-experiment
 ```
 
-### Show
+### Edit the experiment
 
-`Show` command is used to show resources like experiments, e.g.:
+`Edit` command will open the configuration file in your default editor (e.g., vim, nano, etc.) for you to modify the experiment configuration. You can also specify a different editor using the `EDITOR` environment variable, by default it will use `vim`.
 
 ```bash
-hive show experiments
+hive edit config
 ```
 
 ### More
 
 See `hive -h` for more details.
 
-Also refer to `hive.yaml` for full configurations and `hive-mini.yaml` for a minimal configuration example.
-
 ## Development
+
+**Note**: Hive-CLI will read the `.env` file to load environment variables. Refer to the `.env.example` file for the available environment variables.
 
 ### Debugging
 

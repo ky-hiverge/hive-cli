@@ -1,6 +1,7 @@
 # This is only an example configuration file for the Hive CLI.
 
 project_name: llm-speedrun
+token_path: ~/Desktop/HivergeAI/hive.kubeconfig
 coordinator_config_name: default-coordinator-config
 platform: k8s
 repo:

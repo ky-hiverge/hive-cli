@@ -20,7 +20,6 @@ def create_experiment(args):
     BLUE = "\033[94m"
     RESET = "\033[0m"
 
-    # Let's only show this when running the hive init command.
     ascii_art = r"""
      ███          █████   █████  ███
     ░░░███       ░░███   ░░███  ░░░
@@ -36,7 +35,7 @@ def create_experiment(args):
 
     config = load_config(args.config)
     # Init the platform based on the config.
-    platform = PLATFORMS[config.platform.value](args.name)
+    platform = PLATFORMS[config.platform.value](args.name, config.token_path)
 
     platform.create(config=config)
 
@@ -44,19 +43,23 @@ def create_experiment(args):
 def update_experiment(args):
     config = load_config(args.config)
     # Init the platform based on the config.
-    platform = PLATFORMS[config.platform.value](args.name)
+    platform = PLATFORMS[config.platform.value](args.name, config.token_path)
 
     platform.update(args.name, config=config)
     print(f"Experiment {args.name} updated successfully.")
 
 
 def delete_experiment(args):
-    platform = PLATFORMS[args.platform](args.platform)
+    config = load_config(args.config)
+
+    platform = PLATFORMS[args.platform](args.platform, config.token_path)
     platform.delete(args.name)
 
 
 def show_experiment(args):
-    platform = PLATFORMS[args.platform](args.platform)
+    config = load_config(args.config)
+
+    platform = PLATFORMS[args.platform](args.platform, config.token_path)
     platform.show_experiments(args)
 
 
@@ -94,20 +97,20 @@ def main():
     parser_create_exp.set_defaults(func=create_experiment)
 
     # update command
-    parser_update = subparsers.add_parser("update", help="Update resources")
-    update_subparsers = parser_update.add_subparsers(dest="update_target")
+    # parser_update = subparsers.add_parser("update", help="Update resources")
+    # update_subparsers = parser_update.add_subparsers(dest="update_target")
 
-    parser_update_exp = update_subparsers.add_parser(
-        "experiment", aliases=["exp"], help="Update an experiment"
-    )
-    parser_update_exp.add_argument("name", help="Name of the experiment")
-    parser_update_exp.add_argument(
-        "-f",
-        "--config",
-        default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"),
-        help="Path to the config file, default to ~/.hive/sandbox-config.yaml",
-    )
-    parser_update_exp.set_defaults(func=update_experiment)
+    # parser_update_exp = update_subparsers.add_parser(
+    #     "experiment", aliases=["exp"], help="Update an experiment"
+    # )
+    # parser_update_exp.add_argument("name", help="Name of the experiment")
+    # parser_update_exp.add_argument(
+    #     "-f",
+    #     "--config",
+    #     default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"),
+    #     help="Path to the config file, default to ~/.hive/sandbox-config.yaml",
+    # )
+    # parser_update_exp.set_defaults(func=update_experiment)
 
     # delete command
     parser_delete = subparsers.add_parser("delete", help="Delete resources")
@@ -123,6 +126,12 @@ def main():
         choices=PLATFORMS.keys(),
         help="Platform to use, k8s or on-prem, default to use k8s",
     )
+    parser_delete_exp.add_argument(
+        "-f",
+        "--config",
+        default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"),
+        help="Path to the config file, default to ~/.hive/sandbox-config.yaml",
+    )
     parser_delete_exp.set_defaults(func=delete_experiment)
 
     # show command
@@ -137,6 +146,12 @@ def main():
         default="k8s",
         choices=PLATFORMS.keys(),
         help="Platform to use, k8s or on-prem, default to use k8s",
+    )
+    parser_show_exp.add_argument(
+        "-f",
+        "--config",
+        default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"),
+        help="Path to the config file, default to ~/.hive/sandbox-config.yaml",
     )
     parser_show_exp.set_defaults(func=show_experiment)
 

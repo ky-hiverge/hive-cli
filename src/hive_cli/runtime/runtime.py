@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 
 class Runtime:
-    def __init__(self, name: str):
+    def __init__(self, name: str, token_path: str = None):
         """Initialize the Runtime with a name.
         This can be used to set up any necessary runtime configurations.
         """

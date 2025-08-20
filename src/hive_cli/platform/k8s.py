@@ -1,3 +1,4 @@
+from logging import config
 from kubernetes import client
 from kubernetes import config as k8s_config
 from kubernetes.client.api_client import ApiClient
@@ -19,13 +20,10 @@ NAMESPACE = "default"
 
 
 class K8sPlatform(Platform):
-    def __init__(self, name: str):
-        super().__init__(name)
+    def __init__(self, name: str, token_path: str = None):
+        super().__init__(name, token_path)
 
-        # Load the kube config.
-        # This assumes you have a kubeconfig file at the default location (~/.kube/config)
-        # TODO: make this configurable if needed.
-        k8s_config.load_kube_config()
+        k8s_config.load_kube_config(config_file=token_path)
         self.client = client.CustomObjectsApi()
 
     def create(self, config: HiveConfig):

@@ -32,8 +32,8 @@ class Platform(Runtime, ABC):
     def show_experiments(self, args):
         pass
 
-    def __init__(self, name: str):
-        super().__init__(name)
+    def __init__(self, name: str, token_path: str = None):
+        super().__init__(name, token_path)
 
     # setup_environment function can be used to prepare the environment for the experiment,
     # shared logic for both K8s and OnPrem platforms.

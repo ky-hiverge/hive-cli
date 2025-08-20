@@ -1,4 +1,5 @@
 from enum import Enum
+import os
 from typing import Optional
 
 import yaml
@@ -78,6 +79,11 @@ class CloudProviderConfig(BaseModel):
 class HiveConfig(BaseModel):
     project_name: (
         str  # project_name is for a specific project, like the beluga-direct-plan-project.
+    )
+
+    token_path: str = Field(
+        default=os.path.expandvars("$HOME/.kube/config"),
+        description="Path to the auth token file, default to ~/.kube/config",
     )
 
     coordinator_config_name: str = "default-coordinator-config"

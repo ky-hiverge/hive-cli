@@ -1,14 +1,14 @@
 # This is only an example configuration file for the Hive CLI.
 
-project_name: llm-speedrun
+project_name: demo-project
 token_path: /Desktop/HivergeAI/hive.kubeconfig
 coordinator_config_name: default-coordinator-config
 platform: k8s
 repo:
-  url: https://github.com/hiverge/llm-speedrun-project.git
+  url: https://github.com/hiverge/demo-project.git
   branch: main
-  evaluation_script: cifar10-94-630/evaluator.py
-  evolve_files_and_ranges: cifar10-94-630/main.py
+  evaluation_script: evaluator.py
+  evolve_files_and_ranges: main.py
 sandbox:
   replicas: 3
   timeout: 1800
@@ -19,13 +19,13 @@ sandbox:
     limits:
       cpu: "2"
       memory: "2Gi"
-    shmsize: "4Gi"
+    shmsize: "1Gi"
     accelerators: a100-40gb:1 # or a100-80gb:8 or h100:8
   pre_processor: |
     print("Running pre-processing script...")
   envs:
-    - name: LOCK_SANDBOX
-      value: "true"
+    - name: <key>
+      value: <value>
 dashboard:
   frontend_image: <image-name>
   backend_image: <image-name>

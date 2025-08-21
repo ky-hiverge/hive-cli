@@ -73,8 +73,8 @@ class CloudProviderConfig(BaseModel):
 
 
 class HiveConfig(BaseModel):
-    project_name: (
-        str  # project_name is for a specific project.
+    project_name: str = Field(
+        description="The name of the project. Must be all lowercase.",
     )
 
     token_path: str = Field(
@@ -82,7 +82,10 @@ class HiveConfig(BaseModel):
         description="Path to the auth token file, default to ~/.kube/config",
     )
 
-    coordinator_config_name: str = "default-coordinator-config"
+    coordinator_config_name: str = Field(
+        default="default-coordinator-config",
+        description="The name of the coordinator config to use for the experiment. Default to 'default-coordinator-config'.",
+    )
 
     platform: PlatformType = PlatformType.K8S
 

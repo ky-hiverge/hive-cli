@@ -102,7 +102,7 @@ class K8sPlatform(Platform):
 
             console = Console()
             url = f"http://localhost:{args.port}"
-            msg = Text("Opening Hive dashboard at ", style="bold green")
+            msg = Text("Open Hive dashboard at ", style="bold green")
             msg.append(url, style="bold magenta")
             msg.append(" ...", style="dim")
             console.print(msg)

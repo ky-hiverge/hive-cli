@@ -15,6 +15,12 @@ Hive-CLI is a command-line interface for managing and deploying Hive agent and e
 
 ## Installation
 
+### Pre-requisites
+
+- Python 3.8 or higher
+- [Kubectl](https://kubernetes.io/docs/reference/kubectl/kubectl/) via `brew install kubectl`
+- [gcloud cli](https://cloud.google.com/sdk/docs/install) via `brew install gcloud`
+
 ### Install via pip (Not-Available Yet)
 
 ```bash

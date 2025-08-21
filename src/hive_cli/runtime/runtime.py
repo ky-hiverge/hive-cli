@@ -1,3 +1,4 @@
+import hashlib
 from datetime import datetime, timezone
 
 
@@ -7,6 +8,7 @@ class Runtime:
         This can be used to set up any necessary runtime configurations.
         """
 
+        self.token_path = token_path
         self.experiment_name = generate_experiment_name(name)
 
 
@@ -20,6 +22,7 @@ def generate_experiment_name(base_name: str) -> str:
 
     if base_name.endswith("-"):
         timestamp = str(int(datetime.now(timezone.utc).timestamp()))
-        experiment_name = f"{base_name}{timestamp}"
+        unique_hash = hashlib.sha1(timestamp.encode()).hexdigest()[:12]
+        experiment_name = f"{base_name}{unique_hash}"
 
     return experiment_name

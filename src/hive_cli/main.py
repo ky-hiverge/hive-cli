@@ -2,6 +2,9 @@ import argparse
 import os
 import subprocess
 
+from rich.console import Console
+from rich.text import Text
+
 from hive_cli.config import load_config
 from hive_cli.platform.k8s import K8sPlatform
 
@@ -45,7 +48,10 @@ def update_experiment(args):
     platform = PLATFORMS[config.platform.value](args.name, config.token_path)
 
     platform.update(args.name, config=config)
-    print(f"Experiment {args.name} updated successfully.")
+
+    console = Console()
+    msg = Text(f"Experiment {args.name} updated successfully.", style="bold green")
+    console.print(msg)
 
 
 def delete_experiment(args):
@@ -62,10 +68,21 @@ def show_experiment(args):
     platform.show_experiments(args)
 
 
-def config(args):
+def edit(args):
     editor = os.environ.get("EDITOR", "vim")
     subprocess.run([editor, args.config])
-    return
+
+    console = Console()
+    msg = Text("Configuration file ", style="bold green")
+    msg.append(args.config, style="bold magenta")
+    msg.append(" edited successfully.", style="bold green")
+    console.print(msg)
+
+
+def show_dashboard(args):
+    config = load_config(args.config)
+    platform = PLATFORMS[args.platform](args.platform, config.token_path)
+    platform.show_dashboard(args)
 
 
 def main():
@@ -168,7 +185,30 @@ def main():
         default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"),
         help="Path to the config file, defaults to ~/.hive/sandbox-config.yaml",
     )
-    parser_edit_config.set_defaults(func=config)
+    parser_edit_config.set_defaults(func=edit)
+
+    # dashboard command
+    parser_dashboard = subparsers.add_parser("dashboard", help="Open the Hive dashboard")
+    parser_dashboard.add_argument(
+        "--port",
+        default=8080,
+        type=int,
+        help="Port to run the dashboard on, default to 8080",
+    )
+    parser_dashboard.add_argument(
+        "-f",
+        "--config",
+        default=os.path.expandvars("$HOME/.hive/sandbox-config.yaml"),
+        help="Path to the config file, default to ~/.hive/sandbox-config.yaml",
+    )
+    parser_dashboard.add_argument(
+        "-p",
+        "--platform",
+        default="k8s",
+        choices=PLATFORMS.keys(),
+        help="Platform to use, k8s or on-prem, default to use k8s",
+    )
+    parser_dashboard.set_defaults(func=show_dashboard)
 
     args = parser.parse_args()
     if hasattr(args, "func"):

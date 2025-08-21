@@ -1,9 +1,12 @@
+import subprocess
+
 from kubernetes import client
 from kubernetes import config as k8s_config
 from kubernetes.client.api_client import ApiClient
 from kubernetes.client.rest import ApiException
 from rich.console import Console
 from rich.table import Table
+from rich.text import Text
 
 from hive_cli.config import HiveConfig
 from hive_cli.platform.base import Platform
@@ -84,6 +87,42 @@ class K8sPlatform(Platform):
 
         console = Console()
         console.print(table)
+
+    def show_dashboard(self, args):
+        resp = self.client.list_namespaced_custom_object(
+            group=GROUP,
+            version=VERSION,
+            namespace=NAMESPACE,
+            plural=RESOURCE_PLURAL,
+        )
+
+        for item in resp.get("items", []):
+            metadata = item.get("metadata", {})
+            name = metadata.get("name", "Unknown")
+
+            console = Console()
+            url = f"http://localhost:{args.port}"
+            msg = Text("Opening Hive dashboard at ", style="bold green")
+            msg.append(url, style="bold magenta")
+            msg.append(" ...", style="dim")
+            console.print(msg)
+
+            commands = [
+                "kubectl",
+                f"--kubeconfig={self.token_path}",
+                "port-forward",
+                f"svc/{name}-dashboard-frontend",
+                f"{str(args.port)}:8080",
+            ]
+            process = subprocess.Popen(
+                commands, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+            )
+            try:
+                process.wait()
+            except KeyboardInterrupt:
+                pass
+
+            return
 
 
 def deploy(op: str, client: ApiClient, name: str, config: HiveConfig):

@@ -33,6 +33,14 @@ source start.sh
 
 Below we assume that you have a `~/.hive/sandbox-config.yaml` file.
 
+### Edit the experiment
+
+`Edit` command will open the configuration file in your default editor (e.g., vim, nano, etc.) for you to modify the experiment configuration. You can also specify a different editor using the `EDITOR` environment variable, by default it will use `vim`.
+
+```bash
+hive edit config
+```
+
 ### Create an experiment
 
 ```bash
@@ -45,19 +53,17 @@ hive create exp my-experiment
 hive show exps
 ```
 
+### Visit Dashboard
+
+```bash
+hive dashboard
+```
+
 ### Delete an experiment
 
 
 ```bash
 hive delete exp my-experiment
-```
-
-### Edit the experiment
-
-`Edit` command will open the configuration file in your default editor (e.g., vim, nano, etc.) for you to modify the experiment configuration. You can also specify a different editor using the `EDITOR` environment variable, by default it will use `vim`.
-
-```bash
-hive edit config
 ```
 
 ### More

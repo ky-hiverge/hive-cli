@@ -21,3 +21,6 @@ class OnPremPlatform(Platform):
 
     def show_experiments(self, args):
         print("Showing experiments on-premise...")
+
+    def show_dashboard(self, args):
+        print("Showing dashboard on-premise...")

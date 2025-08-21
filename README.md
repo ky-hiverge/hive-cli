@@ -66,7 +66,7 @@ See `hive -h` for more details.
 
 ## Development
 
-**Note**: Hive-CLI will read the `.env` file to load environment variables. Refer to the `.env.example` file for the available environment variables.
+**Note**: Hive-CLI will read the `.env` file to load logging configurations. Refer to the `.env.example` file for examples.
 
 ### Debugging
 

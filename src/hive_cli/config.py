@@ -74,7 +74,7 @@ class CloudProviderConfig(BaseModel):
 
 class HiveConfig(BaseModel):
     project_name: (
-        str  # project_name is for a specific project, like the beluga-direct-plan-project.
+        str  # project_name is for a specific project.
     )
 
     token_path: str = Field(

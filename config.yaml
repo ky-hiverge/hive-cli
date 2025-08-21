@@ -1,9 +1,9 @@
 # This is only an example configuration file for the Hive CLI.
 
 project_name: demo-project
-token_path: /HivergeAI/demo.kubeconfig
 coordinator_config_name: default-coordinator-config
 platform: k8s
+token_path: /HivergeAI/demo.kubeconfig
 repo:
   url: https://github.com/hiverge/demo-project.git
   branch: main

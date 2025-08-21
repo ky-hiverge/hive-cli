@@ -8,7 +8,7 @@ from hive_cli.platform.onprem import OnPremPlatform
 
 PLATFORMS = {
     "k8s": K8sPlatform,
-    "on-prem": OnPremPlatform,
+    # "on-prem": OnPremPlatform,
 }
 
 
@@ -73,6 +73,7 @@ def main():
     parser = argparse.ArgumentParser(description="Hive CLI")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
+    # TODO:
     # # init command
     # parser_init = subparsers.add_parser("init", help="Initialize a repository")
     # parser_init.set_defaults(func=init)
@@ -96,6 +97,7 @@ def main():
     )
     parser_create_exp.set_defaults(func=create_experiment)
 
+    # TODO:
     # update command
     # parser_update = subparsers.add_parser("update", help="Update resources")
     # update_subparsers = parser_update.add_subparsers(dest="update_target")

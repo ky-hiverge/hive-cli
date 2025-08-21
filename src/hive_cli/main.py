@@ -73,8 +73,7 @@ def edit(args):
     subprocess.run([editor, args.config])
 
     console = Console()
-    msg = Text("Configuration file ", style="bold green")
-    msg.append(args.config, style="bold magenta")
+    msg = Text(args.config, style="bold magenta")
     msg.append(" edited successfully.", style="bold green")
     console.print(msg)
 

@@ -4,7 +4,6 @@ import subprocess
 
 from hive_cli.config import load_config
 from hive_cli.platform.k8s import K8sPlatform
-from hive_cli.platform.onprem import OnPremPlatform
 
 PLATFORMS = {
     "k8s": K8sPlatform,

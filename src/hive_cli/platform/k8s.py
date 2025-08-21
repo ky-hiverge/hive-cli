@@ -189,10 +189,4 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
         },
     }
 
-    if config.dashboard:
-        result["spec"]["dashboard"] = {
-            "frontendImage": config.dashboard.frontend_image,
-            "backendImage": config.dashboard.backend_image,
-        }
-
     return result

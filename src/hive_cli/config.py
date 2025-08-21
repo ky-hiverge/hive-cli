@@ -66,15 +66,6 @@ class AWSConfig(BaseModel):
     )
 
 
-class DashboardConfig(BaseModel):
-    frontend_image: str = Field(
-        description="The Docker image to use for the dashboard frontend.",
-    )
-    backend_image: str = Field(
-        description="The Docker image to use for the dashboard backend.",
-    )
-
-
 class CloudProviderConfig(BaseModel):
     spot: bool = False
     gcp: Optional[GCPConfig] = None
@@ -92,7 +83,6 @@ class HiveConfig(BaseModel):
     )
 
     coordinator_config_name: str = "default-coordinator-config"
-    dashboard: Optional[DashboardConfig] = None
 
     platform: PlatformType = PlatformType.K8S
 

@@ -32,10 +32,6 @@ class Platform(Runtime, ABC):
     def show_experiments(self, args):
         pass
 
-    @abstractmethod
-    def show_dashboard(self, args):
-        pass
-
     def __init__(self, name: str, token_path: str = None):
         super().__init__(name, token_path)
 

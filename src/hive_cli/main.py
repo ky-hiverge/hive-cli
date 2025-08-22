@@ -80,8 +80,28 @@ def edit(args):
 
 def show_dashboard(args):
     config = load_config(args.config)
-    platform = PLATFORMS[args.platform](args.platform, config.token_path)
-    platform.show_dashboard(args)
+
+    console = Console()
+    url = f"http://localhost:{args.port}"
+    msg = Text("Open Hive dashboard at ", style="bold green")
+    msg.append(url, style="bold magenta")
+    msg.append(" ...", style="dim")
+    console.print(msg)
+
+    commands = [
+        "kubectl",
+        f"--kubeconfig={config.token_path}",
+        "port-forward",
+        "svc/hive-dashboard-frontend",
+        f"{str(args.port)}:8080",
+    ]
+    process = subprocess.Popen(
+        commands, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
+    )
+    try:
+        process.wait()
+    except KeyboardInterrupt:
+        pass
 
 
 def main():

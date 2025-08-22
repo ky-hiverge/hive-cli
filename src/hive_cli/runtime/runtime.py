@@ -8,7 +8,6 @@ class Runtime:
         This can be used to set up any necessary runtime configurations.
         """
 
-        self.token_path = token_path
         self.experiment_name = generate_experiment_name(name)
 
 

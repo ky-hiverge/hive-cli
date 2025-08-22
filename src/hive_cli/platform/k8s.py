@@ -24,6 +24,7 @@ class K8sPlatform(Platform):
 
         k8s_config.load_kube_config(config_file=token_path)
         self.client = client.CustomObjectsApi()
+        self.core_client = client.CoreV1Api()
 
     def create(self, config: HiveConfig):
         logger.info(f"Creating experiment '{self.experiment_name}' on Kubernetes...")

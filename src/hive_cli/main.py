@@ -2,11 +2,13 @@ import argparse
 import os
 import subprocess
 
+import portforward
 from rich.console import Console
 from rich.text import Text
 
 from hive_cli.config import load_config
 from hive_cli.platform.k8s import K8sPlatform
+from hive_cli.utils import event
 
 PLATFORMS = {
     "k8s": K8sPlatform,
@@ -80,28 +82,36 @@ def edit(args):
 
 def show_dashboard(args):
     config = load_config(args.config)
+    platform = PLATFORMS[args.platform](args.platform, config.token_path)
+    core_v1 = platform.core_client
 
     console = Console()
     url = f"http://localhost:{args.port}"
-    msg = Text("Open Hive dashboard at ", style="bold green")
+    msg = Text("Hive-Dashboard is available at ", style="bold green")
     msg.append(url, style="bold magenta")
     msg.append(" ...", style="dim")
     console.print(msg)
 
-    commands = [
-        "kubectl",
-        f"--kubeconfig={config.token_path}",
-        "port-forward",
-        "svc/hive-dashboard-frontend",
-        f"{str(args.port)}:8080",
-    ]
-    process = subprocess.Popen(
-        commands, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
-    )
-    try:
-        process.wait()
-    except KeyboardInterrupt:
-        pass
+    # TODO: support user namespace
+    namespace = "default"
+    svc_name = "hive-dashboard-frontend"
+    remote_port = 3000
+    local_port = 8080
+    if args.port:
+        local_port = args.port
+
+    svc = core_v1.read_namespaced_service(svc_name, namespace)
+    selector = svc.spec.selector
+    label_selector = ",".join([f"{k}={v}" for k, v in selector.items()])
+    pods = core_v1.list_namespaced_pod(namespace, label_selector=label_selector)
+    if not pods.items:
+        console.print("[bold red]No dashboard available now[/]")
+        return
+    pod_name = pods.items[0].metadata.name
+
+    with portforward.forward(namespace, pod_name, local_port, remote_port):
+        event.wait_for_ctrl_c()
+        console.print("\n[bold yellow]Port forwarding stopped.[/]")
 
 
 def main():

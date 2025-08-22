@@ -18,8 +18,8 @@ Hive-CLI is a command-line interface for managing and deploying Hive agent and e
 ### Pre-requisites
 
 - Python 3.8 or higher
-- [docker](https://www.docker.com/), for image building.
-- [gcloud CLI](https://cloud.google.com/sdk/docs/install) via `brew install gcloud`
+- [docker](https://www.docker.com/) for image building.
+- [gcloud CLI](https://cloud.google.com/sdk/docs/install) via `brew install gcloud` for authentication.
 
 **Notes**:
 

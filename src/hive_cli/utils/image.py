@@ -10,6 +10,7 @@ def build_image(
     context: str = ".",
     dockerfile: str = "Dockerfile",
     push: bool = False,
+    build_args: dict = None,
 ):
     cmd = [
         "docker",
@@ -26,6 +27,10 @@ def build_image(
     ]
     if push:
         cmd.append("--push")
+
+    if build_args:
+        for key, value in build_args.items():
+            cmd.extend(["--build-arg", f"{key}={value}"])
 
     try:
         if logger.isEnabledFor(logging.DEBUG):

@@ -104,7 +104,7 @@ class Platform(Runtime, ABC):
         logger.debug(f"Building temporary repo image in {dest}")
         # build the repository image first
         build_image(
-            image="repo-image:latest",
+            image="temp-image:latest",
             context=dest,
             dockerfile=dest / "Dockerfile",
             # this is a temporary image, so we don't push it

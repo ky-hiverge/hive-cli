@@ -109,7 +109,7 @@ def show_dashboard(args):
         return
     pod_name = pods.items[0].metadata.name
 
-    with portforward.forward(namespace, pod_name, local_port, remote_port):
+    with portforward.forward(namespace, pod_name, local_port, remote_port, config.token_path):
         event.wait_for_ctrl_c()
         console.print("\n[bold yellow]Port forwarding stopped.[/]")
 

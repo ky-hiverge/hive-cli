@@ -96,9 +96,6 @@ def show_dashboard(args):
     namespace = "default"
     svc_name = "hive-dashboard-frontend"
     remote_port = 3000
-    local_port = 8080
-    if args.port:
-        local_port = args.port
 
     svc = core_v1.read_namespaced_service(svc_name, namespace)
     selector = svc.spec.selector
@@ -109,7 +106,7 @@ def show_dashboard(args):
         return
     pod_name = pods.items[0].metadata.name
 
-    with portforward.forward(namespace, pod_name, local_port, remote_port, config.token_path):
+    with portforward.forward(namespace, pod_name, args.port, remote_port, config.token_path):
         event.wait_for_ctrl_c()
         console.print("\n[bold yellow]Port forwarding stopped.[/]")
 
@@ -220,9 +217,9 @@ def main():
     parser_dashboard = subparsers.add_parser("dashboard", help="Open the Hive dashboard")
     parser_dashboard.add_argument(
         "--port",
-        default=8080,
+        default=9090,
         type=int,
-        help="Port to run the dashboard on, default to 8080",
+        help="Port to run the dashboard on, default to 9090",
     )
     parser_dashboard.add_argument(
         "-f",

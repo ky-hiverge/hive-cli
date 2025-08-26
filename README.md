@@ -57,6 +57,8 @@ hive edit config
 hive create exp my-experiment
 ```
 
+*Note: This will build a Docker image for the experiment and push it to the container registry which may take some time, based on the Dockerfile and network speed. You can enable the Debug mode in the configuration file to see more detailed logs.*
+
 ### List experiments
 
 ```bash

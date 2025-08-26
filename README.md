@@ -1,6 +1,6 @@
 # Hive-CLI
 
-Hive-CLI is a command-line interface for managing and deploying Hive agent and experiments on Kubernetes and other platforms.
+Hive-CLI is a command-line interface for managing and deploying the Hive agent and experiments on Kubernetes and other platforms.
 
 ```bash
      ███          █████   █████  ███

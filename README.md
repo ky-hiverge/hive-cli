@@ -25,10 +25,10 @@ Hive-CLI is a command-line interface for managing and deploying the Hive agent a
 
 - Make sure to enable the `✅ Use containerd for pulling and storing images` option in Docker Desktop settings, which is required for multi-arch image support.
 
-### Install via pip (Not-Available Yet)
+### Install via pip
 
 ```bash
-pip install hive-cli
+pip install hiverge-cli
 ```
 
 ### Install from source

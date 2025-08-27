@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hiverge-cli"
-version = "0.2.0"
+version = "0.2.1"
 authors = [
   { name="Hiverge Team" },
 ]
@@ -50,3 +50,9 @@ ignore = ["E501"]
 
 [tool.ruff.format]
 quote-style = "double"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"hive_cli" = ["libs/**/*"]

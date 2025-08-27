@@ -5,7 +5,7 @@ import shutil
 import tempfile
 import unittest
 
-from libs.sandbox_utils import overlay
+from hive_cli.libs.sandbox_utils import overlay
 
 
 class TestMirrorOverlay(unittest.TestCase):

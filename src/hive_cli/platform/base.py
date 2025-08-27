@@ -1,13 +1,14 @@
+import importlib.resources as pkg_resources
 import os
 import shutil
 import tempfile
 from abc import ABC, abstractmethod
 from pathlib import Path
 
+import hive_cli
 from hive_cli.config import HiveConfig
 from hive_cli.runtime.runtime import Runtime
-from hive_cli.utils import git
-from hive_cli.utils.image import build_image
+from hive_cli.utils import git, image
 from hive_cli.utils.logger import logger
 
 
@@ -52,12 +53,9 @@ class Platform(Runtime, ABC):
         logger.info(f"Setting up environment for experiment '{self.experiment_name}'")
         logger.debug(f"The HiveConfig: {config}")
 
-        if not os.path.exists("./tmp"):
-            os.makedirs("./tmp")
-
         # Here you can add more setup logic, like initializing Kubernetes resources
         # or configuring the environment based on the HiveConfig.
-        with tempfile.TemporaryDirectory(dir="./tmp") as temp_dir:
+        with tempfile.TemporaryDirectory() as temp_dir:
             image_name = self.prepare_images(config, temp_dir, push=True)
 
             # Populate related fields to the config, only allow to update here.
@@ -82,14 +80,14 @@ class Platform(Runtime, ABC):
 
         logger.debug(f"Preparing images for experiment '{self.experiment_name}' in {temp_dir}")
 
-        # TODO: refactor this part to use an image by default rather than build from the scratch.
-        shutil.copytree(
-            "./libs",
-            Path("./tmp") / temp_dir,
-            dirs_exist_ok=True,
-        )
-        dest = Path(temp_dir) / "repo"
+        with pkg_resources.path(hive_cli, "libs") as lib_path:
+            shutil.copytree(
+                lib_path,
+                temp_dir,
+                dirs_exist_ok=True,
+            )
 
+        dest = Path(temp_dir) / "repo"
         hash = git.clone_repo(config.repo.url, dest, config.repo.branch)
         logger.debug(
             f"Cloning repository {config.repo.url} to {dest}, the tree structure of the directory: {os.listdir('.')}, the tree structure of the {dest} directory: {os.listdir(dest)}"
@@ -102,7 +100,7 @@ class Platform(Runtime, ABC):
 
         logger.debug(f"Building temporary repo image in {dest}")
         # build the repository image first
-        build_image(
+        image.build_image(
             image="temp-image:latest",
             context=dest,
             dockerfile=dest / "Dockerfile",
@@ -122,7 +120,7 @@ class Platform(Runtime, ABC):
 
         logger.debug(f"Building sandbox image {image_name} in {temp_dir} with push={push}")
         # build the sandbox image
-        build_image(
+        image.build_image(
             image=image_name,
             context=temp_dir,
             dockerfile=f"{temp_dir}/Dockerfile",

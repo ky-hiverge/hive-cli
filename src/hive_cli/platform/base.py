@@ -55,7 +55,6 @@ class Platform(Runtime, ABC):
         # Here you can add more setup logic, like initializing Kubernetes resources
         # or configuring the environment based on the HiveConfig.
         with tempfile.TemporaryDirectory() as temp_dir:
-            print(f"Using temporary directory {temp_dir} for building images.")
             image_name = self.prepare_images(config, temp_dir, push=True)
 
             # Populate related fields to the config, only allow to update here.

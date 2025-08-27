@@ -1,15 +1,14 @@
+import importlib.resources as pkg_resources
 import os
 import shutil
 import tempfile
 from abc import ABC, abstractmethod
 from pathlib import Path
-import importlib.resources as pkg_resources
 
 import hive_cli
 from hive_cli.config import HiveConfig
 from hive_cli.runtime.runtime import Runtime
-from hive_cli.utils import git
-from hive_cli.utils.image import build_image
+from hive_cli.utils import git, image
 from hive_cli.utils.logger import logger
 
 
@@ -101,7 +100,7 @@ class Platform(Runtime, ABC):
 
         logger.debug(f"Building temporary repo image in {dest}")
         # build the repository image first
-        build_image(
+        image.build_image(
             image="temp-image:latest",
             context=dest,
             dockerfile=dest / "Dockerfile",
@@ -121,7 +120,7 @@ class Platform(Runtime, ABC):
 
         logger.debug(f"Building sandbox image {image_name} in {temp_dir} with push={push}")
         # build the sandbox image
-        build_image(
+        image.build_image(
             image=image_name,
             context=temp_dir,
             dockerfile=f"{temp_dir}/Dockerfile",

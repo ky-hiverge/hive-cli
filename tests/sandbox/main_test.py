@@ -7,7 +7,7 @@ import time
 import unittest
 from unittest import mock
 
-import libs.main
+import hive_cli.libs.main
 
 
 class LockTest(unittest.IsolatedAsyncioTestCase):
@@ -17,7 +17,7 @@ class LockTest(unittest.IsolatedAsyncioTestCase):
         """Tests that the sandbox lock works correctly."""
         with mock.patch.dict(os.environ, {"LOCK_SANDBOX": "true"}):
             # Reload module so that locking variable is set
-            importlib.reload(libs.main)
+            importlib.reload(hive_cli.libs.main)
 
             # We will mock `execute_python_function` so it just sleeps for a second
             def _sleep_and_execute(*args, **kwargs):
@@ -25,12 +25,12 @@ class LockTest(unittest.IsolatedAsyncioTestCase):
                 return '{"output": "success", "metainfo": ""}'
 
             with mock.patch.object(
-                libs.main,
+                hive_cli.libs.main,
                 "execute_python_function",
                 _sleep_and_execute,
             ):
                 # Setup mock server response
-                app = libs.main.app.test_client()
+                app = hive_cli.libs.main.app.test_client()
 
                 async def _post_request():
                     """Run a synchronous Flask test client request in a thread."""

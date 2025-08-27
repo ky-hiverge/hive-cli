@@ -50,3 +50,9 @@ ignore = ["E501"]
 
 [tool.ruff.format]
 quote-style = "double"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"hive_cli" = ["libs/**/*"]

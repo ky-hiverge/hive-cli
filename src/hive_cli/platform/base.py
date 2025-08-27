@@ -52,12 +52,10 @@ class Platform(Runtime, ABC):
         logger.info(f"Setting up environment for experiment '{self.experiment_name}'")
         logger.debug(f"The HiveConfig: {config}")
 
-        if not os.path.exists("./tmp"):
-            os.makedirs("./tmp")
-
         # Here you can add more setup logic, like initializing Kubernetes resources
         # or configuring the environment based on the HiveConfig.
-        with tempfile.TemporaryDirectory(dir="./tmp") as temp_dir:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            print(f"Using temporary directory {temp_dir} for building images.")
             image_name = self.prepare_images(config, temp_dir, push=True)
 
             # Populate related fields to the config, only allow to update here.
@@ -84,8 +82,8 @@ class Platform(Runtime, ABC):
 
         # TODO: refactor this part to use an image by default rather than build from the scratch.
         shutil.copytree(
-            "./libs",
-            Path("./tmp") / temp_dir,
+            "libs",
+            temp_dir,
             dirs_exist_ok=True,
         )
         dest = Path(temp_dir) / "repo"

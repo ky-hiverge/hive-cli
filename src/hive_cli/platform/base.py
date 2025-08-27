@@ -3,7 +3,9 @@ import shutil
 import tempfile
 from abc import ABC, abstractmethod
 from pathlib import Path
+import importlib.resources as pkg_resources
 
+import hive_cli
 from hive_cli.config import HiveConfig
 from hive_cli.runtime.runtime import Runtime
 from hive_cli.utils import git
@@ -79,14 +81,14 @@ class Platform(Runtime, ABC):
 
         logger.debug(f"Preparing images for experiment '{self.experiment_name}' in {temp_dir}")
 
-        # TODO: refactor this part to use an image by default rather than build from the scratch.
-        shutil.copytree(
-            "libs",
-            temp_dir,
-            dirs_exist_ok=True,
-        )
-        dest = Path(temp_dir) / "repo"
+        with pkg_resources.path(hive_cli, "libs") as lib_path:
+            shutil.copytree(
+                lib_path,
+                temp_dir,
+                dirs_exist_ok=True,
+            )
 
+        dest = Path(temp_dir) / "repo"
         hash = git.clone_repo(config.repo.url, dest, config.repo.branch)
         logger.debug(
             f"Cloning repository {config.repo.url} to {dest}, the tree structure of the directory: {os.listdir('.')}, the tree structure of the {dest} directory: {os.listdir(dest)}"

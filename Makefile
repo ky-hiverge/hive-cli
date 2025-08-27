@@ -1,4 +1,4 @@
-PACKAGE_NAME = hivecli
+PACKAGE_NAME = hiverge-cli
 
 .PHONY: lint
 lint:

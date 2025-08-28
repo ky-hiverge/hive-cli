@@ -9,8 +9,7 @@ from functools import wraps
 
 from flask import Flask, jsonify, request
 
-import common_tools
-import overlay
+from . import common_tools, overlay
 
 REPO_DIR = "/app/repo"  # Directory where the repository is mounted
 

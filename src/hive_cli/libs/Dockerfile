@@ -8,9 +8,8 @@ RUN pip install --no-cache-dir uv
 COPY pyproject.toml .
 RUN uv pip install --system --requirement pyproject.toml
 
-COPY main.py .
 COPY . .
 
 EXPOSE 8080
 
-ENTRYPOINT ["python", "main.py"]
+ENTRYPOINT ["python", "-m", "main"]

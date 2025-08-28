@@ -9,7 +9,7 @@ COPY pyproject.toml .
 RUN uv pip install --system --requirement pyproject.toml
 
 COPY main.py .
-COPY sandbox_utils sandbox_utils
+COPY . .
 
 EXPOSE 8080
 

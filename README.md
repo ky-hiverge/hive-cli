@@ -28,7 +28,7 @@ Hive-CLI is a command-line interface for managing and deploying the Hive agent a
 ### Install via pip
 
 ```bash
-pip install hiverge-cli==0.2.2
+pip install hiverge-cli
 ```
 
 ### Install from source
@@ -42,6 +42,13 @@ source start.sh
 **Note**: Hive-CLI reads the configuration from a yaml file, by default it will look for the `~/.hive/sandbox-config.yaml`. You can also specify a different configuration file using the `-f` option. Refer to the [config.yaml](./config.yaml) for examples.
 
 Below we assume that you have a `~/.hive/sandbox-config.yaml` file.
+
+### Verify the version
+
+```bash
+hive version
+```
+
 
 ### Edit the experiment
 

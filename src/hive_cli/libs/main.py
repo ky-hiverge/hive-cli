@@ -8,7 +8,8 @@ import threading
 from functools import wraps
 
 from flask import Flask, jsonify, request
-from hive_cli.libs.sandbox_utils import common_tools, overlay
+
+from . import common_tools, overlay
 
 REPO_DIR = "/app/repo"  # Directory where the repository is mounted
 

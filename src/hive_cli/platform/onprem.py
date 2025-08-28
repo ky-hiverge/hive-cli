@@ -4,8 +4,8 @@ from .base import Platform
 
 
 class OnPremPlatform(Platform):
-    def __init__(self, name: str):
-        super().__init__(name)
+    def __init__(self, exp_name: str | None, token_path: str = None):
+        super().__init__(exp_name, token_path)
 
     def create(self, config: HiveConfig):
         print(f"Creating hive on-premise with name: {self.experiment_name} and config: {config}")

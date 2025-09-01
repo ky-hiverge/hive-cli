@@ -12,9 +12,6 @@ sandbox:
   resources:
     cpu: "2"
     memory: "2Gi"
-    shmsize: "1Gi"
-    accelerators: "a100-80gb:1"
-    others: {}
 cloud_provider:
   gcp:
     enabled: true

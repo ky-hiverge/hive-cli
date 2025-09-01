@@ -14,11 +14,26 @@ class PlatformType(str, Enum):
 
 
 class ResourceConfig(BaseModel):
-    requests: Optional[dict] = None
-    limits: Optional[dict] = None
-    accelerators: Optional[str] = None  # e.g., "a100-80gb:8"
-    shmsize: Optional[str] = None
-
+    cpu: str = Field(
+        default="0.5",
+        description="The amount of CPU to allocate to the sandbox, e.g., '2' for 2 CPUs.",
+    )
+    memory: str = Field(
+        default="1Gi",
+        description="The amount of memory to allocate to the sandbox, e.g., '4Mi' for 4 MiB, '4Gi' for 4 GiB.",
+    )
+    accelerators: Optional[str] = Field(
+        default=None,
+        description="The type and number of accelerators to allocate to the sandbox, e.g., 'a100-80gb:8' for 8 A100 80GB GPUs. Only support 'a100-40gb, a100-80gb, h100' now.",
+    )
+    shmsize: Optional[str] = Field(
+        default=None,
+        description="The size of /dev/shm to allocate to the sandbox, /dev/shm is used by some libraries like PyTorch for inter-process communication. e.g., '1Gi' for 1 GiB.",
+    )
+    others: Optional[dict] = Field(
+        default=None,
+        description="Other resource configurations specific to the platform.",
+    )
 
 class EnvConfig(BaseModel):
     name: str
@@ -29,7 +44,7 @@ class SandboxConfig(BaseModel):
     image: Optional[str] = None
     replicas: int = 1
     timeout: int = 60
-    resources: Optional[ResourceConfig] = None
+    resources: ResourceConfig
     envs: Optional[list[EnvConfig]] = None
     pre_processor: Optional[str] = Field(
         default=None,

@@ -217,10 +217,17 @@ def construct_experiment(name: str, namespace: str, config: HiveConfig) -> dict:
     else:
         envs = None
 
-    if config.sandbox.resources is not None:
-        resources = config.sandbox.resources.model_dump()
-    else:
-        resources = {}
+    # parse resources, only set limits to guarantee the resources for sandbox.
+    resources = {}
+    resources["limits"] = {}
+    resources["limits"]["cpu"] = config.sandbox.resources.cpu
+    resources["limits"]["memory"] = config.sandbox.resources.memory
+    if config.sandbox.resources.others:
+        for k, v in config.sandbox.resources.others.items():
+            resources["limits"][k] = v
+    # other fields
+    resources["accelerators"] = config.sandbox.resources.accelerators
+    resources["shmsize"] = config.sandbox.resources.shmsize
 
     result = {
         "apiVersion": f"{GROUP}/{VERSION}",
